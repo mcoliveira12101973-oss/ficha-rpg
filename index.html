@@ -82,6 +82,7 @@ select {
 <body>
 <div class="ficha">
 <h1>🧙 Ficha de RPG</h1>
+<!-- AQUI: BOTÃO DE SALVAR --> <button onclick="salvarFicha()">💾 Salvar ficha</button> 
 
 <div class="topo">
 <img src="https://via.placeholder.com/180x240">
@@ -248,6 +249,45 @@ function definirImagem(){
 function removerImagem(){
   imgPersonagem.src="https://via.placeholder.com/180x240";
 }
+// ===== SALVAR TODA A FICHA =====
+function salvarFicha(){
+  // salva imagem
+  localStorage.setItem("imagem", document.querySelector(".topo img").src);
+
+  // salva todos os campos editáveis
+  document.querySelectorAll("[contenteditable]").forEach(el=>{
+    if(el.id){ // usa o id se existir
+      localStorage.setItem(el.id, el.innerText);
+    }
+  });
+
+  // salva elemento selecionado
+  localStorage.setItem("elemento", document.getElementById("elemento").value);
+
+  alert("Ficha salva com sucesso!");
+}
+
+// ===== CARREGAR TODA A FICHA =====
+function carregarFicha(){
+  // carrega imagem
+  const img = localStorage.getItem("imagem");
+  if(img) document.querySelector(".topo img").src = img;
+
+  // carrega campos editáveis
+  document.querySelectorAll("[contenteditable]").forEach(el=>{
+    if(el.id){
+      const salvo = localStorage.getItem(el.id);
+      if(salvo) el.innerText = salvo;
+    }
+  });
+
+  // carrega elemento selecionado
+  const el = localStorage.getItem("elemento");
+  if(el) document.getElementById("elemento").value = el;
+}
+
+// chama carregar ao abrir
+carregarFicha();
 
 </script>
 
