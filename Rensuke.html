@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -82,6 +82,7 @@ select {
 <body>
 <div class="ficha">
 <h1>🧙 Ficha de RPG</h1>
+<!-- AQUI: BOTÃO DE SALVAR --> <button onclick="salvarFicha()">💾 Salvar ficha</button> 
 
 <div class="topo">
 <img src="https://via.placeholder.com/180x240">
@@ -113,7 +114,15 @@ select {
 </select>
 </p>
 
-<!-- ADICIONADO: EXIBIÇÃO DA TABELA -->
+</select>
+</p>
+
+<!-- AQUI: CONTROLES DE IMAGEM -->
+<div style="margin-top:10px">
+  <button onclick="definirImagem()">Adicionar imagem (link)</button>
+  <button onclick="removerImagem()">Remover imagem</button>
+</div>
+  
 <p><b>Relação Elemental:</b>
 <span id="infoElemento" style="color:#ffd700;">—</span>
 </p>
@@ -165,7 +174,7 @@ select {
 <tr><td>Mestria de Elemento</td><td contenteditable class="atrib">2</td><td>+</td></tr>
 </table>
 
-<canvas id="grafico"></canvas>
+<canvas id="grafico"></canvas> 
 </div>
 </div>
 
@@ -192,32 +201,58 @@ const grafico = new Chart(document.getElementById("grafico"), {
   options:{ scales:{ r:{ beginAtZero:true, max:20 } } }
 });
 
-function atualizarGrafico(){
-  const valores=[...document.querySelectorAll(".atrib")].slice(0,6).map(a=>+a.innerText);
-  grafico.data.datasets[0].data=valores;
-  grafico.update();
-}
-
 // ===== SISTEMA ELEMENTAL =====
 const tabelaElemental={
-Fogo:{fraco:"Água",forte:"Planta"},
-Água:{fraco:"Raio",forte:"Fogo"},
-Terra:{fraco:"Água",forte:"Raio"},
-Ar:{fraco:"Terra",forte:"Fogo"},
-Raio:{fraco:"Terra",forte:"Água"},
-Gelo:{fraco:"Fogo",forte:"Ar"},
-Natureza:{fraco:"Fogo",forte:"Terra"},
-Madeira:{fraco:"Fogo",forte:"Água"},
-Planta:{fraco:"Fogo",forte:"Água"},
-Veneno:{fraco:"Luz",forte:"Planta"},
-Metal:{fraco:"Raio",forte:"Veneno"},
-Tempo:{fraco:"Caos",forte:"Destino"},
-Espaço:{fraco:"Gravidade",forte:"Astral"},
-Gravidade:{fraco:"Espaço",forte:"Ar"},
-Destino:{fraco:"Acaso",forte:"Tempo"},
-Acaso:{fraco:"Ordem",forte:"Destino"},
-Luz:{fraco:"Trevas",forte:"Maldição"},
-Trevas:{fraco:"Luz",forte:"Psíquico"}
+  Fogo:{fraco:"Água",forte:"Planta"},
+  Água:{fraco:"Raio",forte:"Fogo"},
+  Terra:{fraco:"Água",forte:"Raio"},
+  Ar:{fraco:"Terra",forte:"Fogo"},
+  Raio:{fraco:"Terra",forte:"Água"},
+  Gelo:{fraco:"Fogo",forte:"Ar"},
+  Natureza:{fraco:"Fogo",forte:"Terra"},
+  Madeira:{fraco:"Fogo",forte:"Água"},
+  Planta:{fraco:"Fogo",forte:"Água"},
+  Veneno:{fraco:"Luz",forte:"Planta"},
+  Areia:{fraco:"Água",forte:"Fogo"},
+  Lama:{fraco:"Raio",forte:"Terra"},
+  Pedra:{fraco:"Raio",forte:"Gelo"},
+  Sombras:{fraco:"Luz",forte:"Medo"},
+  Trevas:{fraco:"Luz",forte:"Psíquico"},
+  Maldição:{fraco:"Sagrado",forte:"Emoção"},
+  Corrupção:{fraco:"Ordem",forte:"Caos"},
+  Vazio:{fraco:"Energia",forte:"Abismo"},
+  Medo:{fraco:"Luz",forte:"Sonho"},
+  Luz:{fraco:"Trevas",forte:"Maldição"},
+  Sagrado:{fraco:"Profano",forte:"Trevas"},
+  Celestial:{fraco:"Caos",forte:"Infernal"},
+  Astral:{fraco:"Espaço",forte:"Estelar"},
+  Estelar:{fraco:"Abismo",forte:"Astral"},
+  Ordem:{fraco:"Caos",forte:"Destino"},
+  Caos:{fraco:"Ordem",forte:"Infernal"},
+  Infernal:{fraco:"Sagrado",forte:"Sangue"},
+  Sangue:{fraco:"Veneno",forte:"Sacrifício"},
+  Sacrifício:{fraco:"Pecado",forte:"Sagrado"},
+  Pecado:{fraco:"Ordem",forte:"Emoção"},
+  Mente:{fraco:"Emoção",forte:"Psíquico"},
+  Psíquico:{fraco:"Trevas",forte:"Sonho"},
+  Sonho:{fraco:"Ordem",forte:"Ilusão"},
+  Ilusão:{fraco:"Luz",forte:"Emoção"},
+  Emoção:{fraco:"Mente",forte:"Pecado"},
+  Metal:{fraco:"Raio",forte:"Veneno"},
+  Ferro:{fraco:"Fogo",forte:"Ossos"},
+  Ossos:{fraco:"Metal",forte:"Veneno"},
+  Cristal:{fraco:"Sombras",forte:"Luz"},
+  Vidro:{fraco:"Pedra",forte:"Gelo"},
+  Tempo:{fraco:"Caos",forte:"Destino"},
+  Espaço:{fraco:"Gravidade",forte:"Astral"},
+  Gravidade:{fraco:"Espaço",forte:"Ar"},
+  Destino:{fraco:"Acaso",forte:"Tempo"},
+  Acaso:{fraco:"Ordem",forte:"Destino"},
+  Energia:{fraco:"Abismo",forte:"Éter"},
+  Éter:{fraco:"Vazio",forte:"Energia"},
+  Abismo:{fraco:"Luz",forte:"Vazio"},
+  Cinzas:{fraco:"Água",forte:"Fogo"},
+  Névoa:{fraco:"Ar",forte:"Sombras"}
 };
 
 const infoElemento=document.getElementById("infoElemento");
@@ -231,6 +266,61 @@ function atualizarInfoElemental(){
 
 selectElemento.addEventListener("change",atualizarInfoElemental);
 atualizarInfoElemental();
+
+// ===== LINHA ADICIONADA (GRÁFICO AUTOMÁTICO) =====
+document.querySelectorAll(".atrib").forEach(a=>a.addEventListener("input",()=>{grafico.data.datasets[0].data=[...document.querySelectorAll(".atrib")].slice(0,6).map(x=>+x.innerText);grafico.update();})); 
+
+// ===== SISTEMA DE IMAGEM =====
+const imgPersonagem=document.querySelector(".topo img");
+
+function definirImagem(){
+  const link=prompt("Cole o link da imagem:");
+  if(link) imgPersonagem.src=link;
+}
+
+function removerImagem(){
+  imgPersonagem.src="https://via.placeholder.com/180x240";
+}
+// ===== SALVAR TODA A FICHA =====
+function salvarFicha(){
+  // salva imagem
+  localStorage.setItem("imagem", document.querySelector(".topo img").src);
+
+  // salva todos os campos editáveis
+  document.querySelectorAll("[contenteditable]").forEach(el=>{
+    if(el.id){ // usa o id se existir
+      localStorage.setItem(el.id, el.innerText);
+    }
+  });
+
+  // salva elemento selecionado
+  localStorage.setItem("elemento", document.getElementById("elemento").value);
+
+  alert("Ficha salva com sucesso!");
+}
+
+// ===== CARREGAR TODA A FICHA =====
+function carregarFicha(){
+  // carrega imagem
+  const img = localStorage.getItem("imagem");
+  if(img) document.querySelector(".topo img").src = img;
+
+  // carrega campos editáveis
+  document.querySelectorAll("[contenteditable]").forEach(el=>{
+    if(el.id){
+      const salvo = localStorage.getItem(el.id);
+      if(salvo) el.innerText = salvo;
+    }
+  });
+
+  // carrega elemento selecionado
+  const el = localStorage.getItem("elemento");
+  if(el) document.getElementById("elemento").value = el;
+}
+
+// chama carregar ao abrir
+carregarFicha();
+
 </script>
 
 </body>
