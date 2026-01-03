@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -113,7 +113,15 @@ select {
 </select>
 </p>
 
-<!-- ADICIONADO: EXIBIÇÃO DA TABELA -->
+</select>
+</p>
+
+<!-- AQUI: CONTROLES DE IMAGEM -->
+<div style="margin-top:10px">
+  <button onclick="definirImagem()">Adicionar imagem (link)</button>
+  <button onclick="removerImagem()">Remover imagem</button>
+</div>
+  
 <p><b>Relação Elemental:</b>
 <span id="infoElemento" style="color:#ffd700;">—</span>
 </p>
@@ -165,7 +173,7 @@ select {
 <tr><td>Mestria de Elemento</td><td contenteditable class="atrib">2</td><td>+</td></tr>
 </table>
 
-<canvas id="grafico"></canvas>
+<canvas id="grafico"></canvas> 
 </div>
 </div>
 
@@ -191,12 +199,6 @@ const grafico = new Chart(document.getElementById("grafico"), {
   },
   options:{ scales:{ r:{ beginAtZero:true, max:20 } } }
 });
-
-function atualizarGrafico(){
-  const valores=[...document.querySelectorAll(".atrib")].slice(0,6).map(a=>+a.innerText);
-  grafico.data.datasets[0].data=valores;
-  grafico.update();
-}
 
 // ===== SISTEMA ELEMENTAL =====
 const tabelaElemental={
@@ -231,6 +233,22 @@ function atualizarInfoElemental(){
 
 selectElemento.addEventListener("change",atualizarInfoElemental);
 atualizarInfoElemental();
+
+// ===== LINHA ADICIONADA (GRÁFICO AUTOMÁTICO) =====
+document.querySelectorAll(".atrib").forEach(a=>a.addEventListener("input",()=>{grafico.data.datasets[0].data=[...document.querySelectorAll(".atrib")].slice(0,6).map(x=>+x.innerText);grafico.update();})); 
+
+// ===== SISTEMA DE IMAGEM =====
+const imgPersonagem=document.querySelector(".topo img");
+
+function definirImagem(){
+  const link=prompt("Cole o link da imagem:");
+  if(link) imgPersonagem.src=link;
+}
+
+function removerImagem(){
+  imgPersonagem.src="https://via.placeholder.com/180x240";
+}
+
 </script>
 
 </body>
