@@ -87,9 +87,9 @@ select {
 <div class="topo">
 <img src="https://via.placeholder.com/180x240">
 <div class="info">
-<p><b>Nome:</b> <span contenteditable>Herói</span></p>
-<p><b>Nível:</b> <span contenteditable>1</span></p>
-<p><b>Classe:</b> <span contenteditable>Guardião</span></p>
+<p><b>Nome:</b> <span contenteditable id="nome">Herói</span></p>
+<p><b>Nível:</b> <span contenteditable id="nivel">1</span></p>
+<p><b>Classe:</b> <span contenteditable id="classe">Guardião</span></p>
 
 <p><b>Elemento:</b>
 <select id="elemento">
@@ -161,17 +161,17 @@ select {
 <h2>Atributos</h2>
 <table>
 <tr><th>Atributo</th><th>Valor</th><th>Mod</th></tr>
-<tr><td>Força</td><td contenteditable class="atrib">12</td><td>+</td></tr>
-<tr><td>Destreza</td><td contenteditable class="atrib">14</td><td>+</td></tr>
-<tr><td>Constituição</td><td contenteditable class="atrib">13</td><td>+</td></tr>
-<tr><td>Inteligência</td><td contenteditable class="atrib">10</td><td>+</td></tr>
-<tr><td>Sabedoria</td><td contenteditable class="atrib">11</td><td>+</td></tr>
-<tr><td>Carisma</td><td contenteditable class="atrib">9</td><td>+</td></tr>
+<tr><td>Força</td><td contenteditable class="atrib" id="forca">12</td><td>+</td></tr>
+<tr><td>Destreza</td><td contenteditable class="atrib" id="destreza">14</td><td>+</td></tr>
+<tr><td>Constituição</td><td contenteditable class="atrib" id="constituicao">13</td><td>+</td></tr>
+<tr><td>Inteligência</td><td contenteditable class="atrib" id="inteligencia">10</td><td>+</td></tr>
+<tr><td>Sabedoria</td><td contenteditable class="atrib" id="sabedoria">11</td><td>+</td></tr>
+<tr><td>Carisma</td><td contenteditable class="atrib" id="carisma">9</td><td>+</td></tr>
 <tr><th colspan="3">Atributos de Combate</th></tr>
-<tr><td>Defesa / CA</td><td contenteditable class="atrib">15</td><td>+</td></tr>
-<tr><td>Iniciativa</td><td contenteditable class="atrib">3</td><td>+</td></tr>
-<tr><td>Deslocamento</td><td contenteditable class="atrib">9</td><td>m</td></tr>
-<tr><td>Mestria de Elemento</td><td contenteditable class="atrib">2</td><td>+</td></tr>
+<tr><td>Defesa / CA</td><td contenteditable class="atrib" id="defesa">15</td><td>+</td></tr>
+<tr><td>Iniciativa</td><td contenteditable class="atrib" id="iniciativa">3</td><td>+</td></tr>
+<tr><td>Deslocamento</td><td contenteditable class="atrib" id="deslocamento">9</td><td>m</td></tr>
+<tr><td>Mestria de Elemento</td><td contenteditable class="atrib" id="mestria">2</td><td>+</td></tr>
 </table>
 
 <canvas id="grafico"></canvas> 
