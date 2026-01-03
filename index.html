@@ -87,9 +87,25 @@ select {
 <div class="topo">
 <img src="https://via.placeholder.com/180x240">
 <div class="info">
-<p><b>Nome:</b> <span contenteditable>Herói</span></p>
-<p><b>Nível:</b> <span contenteditable>1</span></p>
-<p><b>Classe:</b> <span contenteditable>Guardião</span></p>
+  <p><b>Nome:</b> <span contenteditable id="nome">Herói</span></p>
+  <p><b>Nível:</b> <span contenteditable id="nivel">1</span></p>
+  <p><b>Classe:</b> <span contenteditable id="classe">Guardião</span></p>
+
+  <p><b>Elemento:</b>
+    <select id="elemento">
+      <!-- todas as opções de elemento já estão aqui -->
+    </select>
+  </p>
+
+  <div style="margin-top:10px">
+    <button onclick="definirImagem()">Adicionar imagem (link)</button>
+    <button onclick="removerImagem()">Remover imagem</button>
+  </div>
+
+  <p><b>Relação Elemental:</b>
+    <span id="infoElemento" style="color:#ffd700;">—</span>
+  </p>
+</div>
 
 <p><b>Elemento:</b>
 <select id="elemento">
@@ -135,48 +151,52 @@ select {
 <table>
 <tr><th>Item</th><th>Atual</th><th>Máx</th><th>Ações</th></tr>
 <tr>
-<td>PV / Vida</td>
-<td contenteditable id="hpAtual">40</td>
-<td contenteditable id="hpMax">50</td>
-<td>
-<button onclick="alterarHP(-5)">-5</button>
-<button onclick="alterarHP(5)">+5</button>
-</td>
+  <td>PV / Vida</td>
+  <td contenteditable id="hpAtual">40</td>
+  <td contenteditable id="hpMax">50</td>
+  <td>
+    <button onclick="alterarHP(-5)">-5</button>
+    <button onclick="alterarHP(5)">+5</button>
+  </td>
 </tr>
 <tr><td colspan="4"><div class="barra"><div id="hpBar" class="hp"></div></div></td></tr>
 <tr>
-<td>PM / Mana</td>
-<td contenteditable id="mpAtual">20</td>
-<td contenteditable id="mpMax">30</td>
-<td>
-<button onclick="alterarMP(-5)">-5</button>
-<button onclick="alterarMP(5)">+5</button>
-</td>
+  <td>PM / Mana</td>
+  <td contenteditable id="mpAtual">20</td>
+  <td contenteditable id="mpMax">30</td>
+  <td>
+    <button onclick="alterarMP(-5)">-5</button>
+    <button onclick="alterarMP(5)">+5</button>
+  </td>
 </tr>
 <tr><td colspan="4"><div class="barra"><div id="mpBar" class="mp"></div></div></td></tr>
 </table>
-</div>
 
 <div class="secao">
 <h2>Atributos</h2>
 <table>
-<tr><th>Atributo</th><th>Valor</th><th>Mod</th></tr>
-<tr><td>Força</td><td contenteditable class="atrib">12</td><td>+</td></tr>
-<tr><td>Destreza</td><td contenteditable class="atrib">14</td><td>+</td></tr>
-<tr><td>Constituição</td><td contenteditable class="atrib">13</td><td>+</td></tr>
-<tr><td>Inteligência</td><td contenteditable class="atrib">10</td><td>+</td></tr>
-<tr><td>Sabedoria</td><td contenteditable class="atrib">11</td><td>+</td></tr>
-<tr><td>Carisma</td><td contenteditable class="atrib">9</td><td>+</td></tr>
-<tr><th colspan="3">Atributos de Combate</th></tr>
-<tr><td>Defesa / CA</td><td contenteditable class="atrib">15</td><td>+</td></tr>
-<tr><td>Iniciativa</td><td contenteditable class="atrib">3</td><td>+</td></tr>
-<tr><td>Deslocamento</td><td contenteditable class="atrib">9</td><td>m</td></tr>
-<tr><td>Mestria de Elemento</td><td contenteditable class="atrib">2</td><td>+</td></tr>
+<tr><th>Item</th><th>Atual</th><th>Máx</th><th>Ações</th></tr>
+<tr>
+  <td>PV / Vida</td>
+  <td contenteditable id="hpAtual">40</td>
+  <td contenteditable id="hpMax">50</td>
+  <td>
+    <button onclick="alterarHP(-5)">-5</button>
+    <button onclick="alterarHP(5)">+5</button>
+  </td>
+</tr>
+<tr><td colspan="4"><div class="barra"><div id="hpBar" class="hp"></div></div></td></tr>
+<tr>
+  <td>PM / Mana</td>
+  <td contenteditable id="mpAtual">20</td>
+  <td contenteditable id="mpMax">30</td>
+  <td>
+    <button onclick="alterarMP(-5)">-5</button>
+    <button onclick="alterarMP(5)">+5</button>
+  </td>
+</tr>
+<tr><td colspan="4"><div class="barra"><div id="mpBar" class="mp"></div></div></td></tr>
 </table>
-
-<canvas id="grafico"></canvas> 
-</div>
-</div>
 
 <script>
 // ===== VIDA / MANA =====
