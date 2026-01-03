@@ -317,6 +317,12 @@ function carregarFicha(){
   // carrega elemento selecionado
   const el = localStorage.getItem("elemento");
   if(el) document.getElementById("elemento").value = el;
+
+  // atualiza relação elemental
+  atualizarInfoElemental();
+
+  // atualiza barras de HP/MP com os valores carregados
+  atualizarBarras();
 }
 
 // chama carregar ao abrir
