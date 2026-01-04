@@ -343,34 +343,40 @@ window.onload = carregarAtributos;
 carregarFicha();
 
   <script>
-    const repoName = window.location.pathname.split('/')[1]; 
+  const repoName = window.location.pathname.split('/')[1];
 
+  function salvarFicha() {
     const ficha = {
-      forca: 16,
-      destreza: 12,
-      constituicao: 14,
-      inteligencia: 10,
-      sabedoria: 11,
-      carisma: 9
+      forca: parseInt(document.getElementById("forca").value),
+      destreza: parseInt(document.getElementById("destreza").value),
+      constituicao: parseInt(document.getElementById("constituicao").value),
+      inteligencia: parseInt(document.getElementById("inteligencia").value),
+      sabedoria: parseInt(document.getElementById("sabedoria").value),
+      carisma: parseInt(document.getElementById("carisma").value)
     };
+    localStorage.setItem(`ficha-${repoName}`, JSON.stringify(ficha));
+    alert(`Ficha salva em ${repoName}!`);
+  }
 
-    function salvarFicha() {
-      localStorage.setItem(`ficha-${repoName}`, JSON.stringify(ficha));
-      alert(`Ficha salva em ${repoName}!`);
+  function carregarFicha() {
+    const dados = localStorage.getItem(`ficha-${repoName}`);
+    if (dados) {
+      const fichaCarregada = JSON.parse(dados);
+      document.getElementById("forca").value = fichaCarregada.forca;
+      document.getElementById("destreza").value = fichaCarregada.destreza;
+      document.getElementById("constituicao").value = fichaCarregada.constituicao;
+      document.getElementById("inteligencia").value = fichaCarregada.inteligencia;
+      document.getElementById("sabedoria").value = fichaCarregada.sabedoria;
+      document.getElementById("carisma").value = fichaCarregada.carisma;
+     alert(`Ficha salva em ${repoName}!`);
+    } else {
+      alert("Nenhuma ficha salva para este site.");
     }
+  }
+</script>
 
-    function carregarFicha() {
-      const dados = localStorage.getItem(`ficha-${repoName}`);
-      if (dados) {
-        const fichaCarregada = JSON.parse(dados);
-        console.log(fichaCarregada);
-        alert("Ficha carregada: " + JSON.stringify(fichaCarregada));
-      } else {
-        alert("Nenhuma ficha salva para este site.");
-      }
-    }
-  </script>
-</body>
+  }
+}
 
 </script>
 
