@@ -324,15 +324,20 @@ function carregarFicha(){
   // atualiza barras de HP/MP com os valores carregados
   atualizarBarras();
 }
-grafico.data.datasets[0].data = [
-  +forca.innerText,
-  +destreza.innerText,
-  +constituicao.innerText,
-  +inteligencia.innerText,
-  +sabedoria.innerText,
-  +carisma.innerText
-];
-grafico.update();
+function carregarAtributos(){
+  const ids = ["forca", "destreza", "constituicao", "inteligencia", "sabedoria", "carisma"];
+  const valores = [];
+
+  ids.forEach(id => {
+    const salvo = localStorage.getItem(id);
+    if(salvo) document.getElementById(id).innerText = salvo;
+    valores.push(+document.getElementById(id).innerText);
+  });
+
+  grafico.data.datasets[0].data = valores;
+  grafico.update();
+}
+window.onload = carregarAtributos;
 
 // chama carregar ao abrir
 carregarFicha();
