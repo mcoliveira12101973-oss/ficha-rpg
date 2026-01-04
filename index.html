@@ -287,17 +287,17 @@ const repoName = window.location.pathname.split('/')[1];
 // ===== SALVAR TODA A FICHA =====
 function salvarFicha(){
   // salva imagem
-  localStorage.setItem("imagem", document.querySelector(".topo img").src);
+  localStorage.setItem(`imagem-${repNome}`, ...);
 
   // salva todos os campos editáveis
   document.querySelectorAll("[contenteditable]").forEach(el=>{
     if(el.id){ // usa o id se existir
-      localStorage.setItem(el.id, el.innerText);
+     localStorage.setItem(`${el.id}-${repNome}`, ...);
     }
   });
 
   // salva elemento selecionado
-  localStorage.setItem("elemento", document.getElementById("elemento").value);
+  localStorage.setItem(`elemento-${repNome}`, ...);
 
   alert("Ficha salva com sucesso!");
 }
@@ -305,19 +305,19 @@ function salvarFicha(){
 // ===== CARREGAR TODA A FICHA =====
 function carregarFicha(){
   // carrega imagem
-  const img = localStorage.getItem("imagem");
+  const img = localStorage.getItem(`imagem-${repNome}`);
   if(img) document.querySelector(".topo img").src = img;
 
   // carrega campos editáveis
   document.querySelectorAll("[contenteditable]").forEach(el=>{
     if(el.id){
-      const salvo = localStorage.getItem(el.id);
+      const salvo = localStorage.getItem(`${el.id}-${repNome}`);
       if(salvo) el.innerText = salvo;
     }
   });
 
   // carrega elemento selecionado
-  const el = localStorage.getItem("elemento");
+  const el = localStorage.getItem(`elemento-${repNome}`);
   if(el) document.getElementById("elemento").value = el;
 
   // atualiza relação elemental
