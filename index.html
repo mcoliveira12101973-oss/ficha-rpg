@@ -282,6 +282,8 @@ function definirImagem(){
 function removerImagem(){
   imgPersonagem.src="https://via.placeholder.com/180x240";
 }
+const repoName = window.location.pathname.split('/')[1];
+
 // ===== SALVAR TODA A FICHA =====
 function salvarFicha(){
   // salva imagem
@@ -341,6 +343,67 @@ window.onload = carregarAtributos;
 
 // chama carregar ao abrir
 carregarFicha();
+
+<script>
+// Pega o nome do repositório a partir da URL
+const repNome = window.location.pathname.split("/")[1];
+
+// ------ REMOVER IMAGEM ------
+function removerImagem() {
+  document.querySelector(".topo img").src = "https://via.placeholder.com/180x240";
+}
+
+// ------ SALVAR TODA A FICHA ------
+function salvarFicha() {
+  // Salva imagem
+  localStorage.setItem(`imagem-${repNome}`, document.querySelector(".topo img").src);
+
+  // Salva todos os campos editáveis
+  document.querySelectorAll(".contenteditabletable").forEach(el => {
+    if (el.id) {
+      localStorage.setItem(`${el.id}-${repNome}`, el.innerText);
+    }
+  });
+
+  // Salva elemento selecionado (se tiver)
+  const elemento = document.getElementById("elemento");
+  if (elemento) {
+    localStorage.setItem(`elemento-${repNome}`, elemento.value);
+  }
+
+  alert(`Ficha salva com sucesso em ${repNome}!`);
+}
+
+// ------ CARREGAR TODA A FICHA ------
+function carregarFicha() {
+  // Carrega imagem
+  const img = localStorage.getItem(`imagem-${repNome}`);
+  if (img) {
+    document.querySelector(".topo img").src = img;
+  }
+
+  // Carrega campos editáveis
+  document.querySelectorAll(".contenteditabletable").forEach(el => {
+    if (el.id) {
+      const valor = localStorage.getItem(`${el.id}-${repNome}`);
+      if (valor !== null) {
+        el.innerText = valor;
+      }
+    }
+  });
+
+  // Carrega elemento selecionado (se tiver)
+  const elemento = document.getElementById("elemento");
+  if (elemento) {
+    const valorElemento = localStorage.getItem(`elemento-${repNome}`);
+    if (valorElemento !== null) {
+      elemento.value = valorElemento;
+    }
+  }
+
+  alert(`Ficha carregada de ${repNome}!`);
+}
+</script>
 
 </script>
 
