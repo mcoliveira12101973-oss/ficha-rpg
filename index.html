@@ -324,7 +324,6 @@ function carregarFicha(){
   // atualiza barras de HP/MP com os valores carregados
   atualizarBarras();
 }
-grafico.data.datasets[0].data = [
  grafico.data.datasets[0].data = [
   +document.getElementById("forca").innerText,
   +document.getElementById("destreza").innerText,
@@ -332,9 +331,6 @@ grafico.data.datasets[0].data = [
   +document.getElementById("inteligencia").innerText,
   +document.getElementById("sabedoria").innerText,
   +document.getElementById("carisma").innerText
-];
-grafico.update();
-
 ];
 grafico.update();
 
