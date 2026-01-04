@@ -325,12 +325,12 @@ function carregarFicha(){
   atualizarBarras();
 }
 grafico.data.datasets[0].data = [
-  +forca.innerText,
-  +destreza.innerText,
-  +constituicao.innerText,
-  +inteligencia.innerText,
-  +sabedoria.innerText,
-  +carisma.innerText
+  +document.getElementById("forca").innerText,
+  +document.getElementById("destreza").innerText,
+  +document.getElementById("constituicao").innerText,
+  +document.getElementById("inteligencia").innerText,
+  +document.getElementById("sabedoria").innerText,
+  +document.getElementById("carisma").innerText
 ];
 grafico.update();
 
