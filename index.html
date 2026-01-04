@@ -342,6 +342,36 @@ window.onload = carregarAtributos;
 // chama carregar ao abrir
 carregarFicha();
 
+  <script>
+    const repoName = window.location.pathname.split('/')[1]; 
+
+    const ficha = {
+      forca: 16,
+      destreza: 12,
+      constituicao: 14,
+      inteligencia: 10,
+      sabedoria: 11,
+      carisma: 9
+    };
+
+    function salvarFicha() {
+      localStorage.setItem(`ficha-${repoName}`, JSON.stringify(ficha));
+      alert(`Ficha salva em ${repoName}!`);
+    }
+
+    function carregarFicha() {
+      const dados = localStorage.getItem(`ficha-${repoName}`);
+      if (dados) {
+        const fichaCarregada = JSON.parse(dados);
+        console.log(fichaCarregada);
+        alert("Ficha carregada: " + JSON.stringify(fichaCarregada));
+      } else {
+        alert("Nenhuma ficha salva para este site.");
+      }
+    }
+  </script>
+</body>
+
 </script>
 
 </body>
