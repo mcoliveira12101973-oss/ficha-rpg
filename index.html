@@ -203,70 +203,12 @@ const grafico = new Chart(document.getElementById("grafico"), {
 });
 
 // ===== SISTEMA ELEMENTAL =====
-const tabelaElemental={
-  Fogo:{fraco:"Água",forte:"Planta"},
-  Água:{fraco:"Raio",forte:"Fogo"},
-  Terra:{fraco:"Água",forte:"Raio"},
-  Ar:{fraco:"Terra",forte:"Fogo"},
-  Raio:{fraco:"Terra",forte:"Água"},
-  Gelo:{fraco:"Fogo",forte:"Ar"},
-  Natureza:{fraco:"Fogo",forte:"Terra"},
-  Madeira:{fraco:"Fogo",forte:"Água"},
-  Planta:{fraco:"Fogo",forte:"Água"},
-  Veneno:{fraco:"Luz",forte:"Planta"},
-  Areia:{fraco:"Água",forte:"Fogo"},
-  Lama:{fraco:"Raio",forte:"Terra"},
-  Pedra:{fraco:"Raio",forte:"Gelo"},
-  Sombras:{fraco:"Luz",forte:"Medo"},
-  Trevas:{fraco:"Luz",forte:"Psíquico"},
-  Maldição:{fraco:"Sagrado",forte:"Emoção"},
-  Corrupção:{fraco:"Ordem",forte:"Caos"},
-  Vazio:{fraco:"Energia",forte:"Abismo"},
-  Medo:{fraco:"Luz",forte:"Sonho"},
-  Luz:{fraco:"Trevas",forte:"Maldição"},
-  Sagrado:{fraco:"Profano",forte:"Trevas"},
-  Celestial:{fraco:"Caos",forte:"Infernal"},
-  Astral:{fraco:"Espaço",forte:"Estelar"},
-  Estelar:{fraco:"Abismo",forte:"Astral"},
-  Ordem:{fraco:"Caos",forte:"Destino"},
-  Caos:{fraco:"Ordem",forte:"Infernal"},
-  Infernal:{fraco:"Sagrado",forte:"Sangue"},
-  Sangue:{fraco:"Veneno",forte:"Sacrifício"},
-  Sacrifício:{fraco:"Pecado",forte:"Sagrado"},
-  Pecado:{fraco:"Ordem",forte:"Emoção"},
-  Mente:{fraco:"Emoção",forte:"Psíquico"},
-  Psíquico:{fraco:"Trevas",forte:"Sonho"},
-  Sonho:{fraco:"Ordem",forte:"Ilusão"},
-  Ilusão:{fraco:"Luz",forte:"Emoção"},
-  Emoção:{fraco:"Mente",forte:"Pecado"},
-  Metal:{fraco:"Raio",forte:"Veneno"},
-  Ferro:{fraco:"Fogo",forte:"Ossos"},
-  Ossos:{fraco:"Metal",forte:"Veneno"},
-  Cristal:{fraco:"Sombras",forte:"Luz"},
-  Vidro:{fraco:"Pedra",forte:"Gelo"},
-  Tempo:{fraco:"Caos",forte:"Destino"},
-  Espaço:{fraco:"Gravidade",forte:"Astral"},
-  Gravidade:{fraco:"Espaço",forte:"Ar"},
-  Destino:{fraco:"Acaso",forte:"Tempo"},
-  Acaso:{fraco:"Ordem",forte:"Destino"},
-  Energia:{fraco:"Abismo",forte:"Éter"},
-  Éter:{fraco:"Vazio",forte:"Energia"},
-  Abismo:{fraco:"Luz",forte:"Vazio"},
-  Cinzas:{fraco:"Água",forte:"Fogo"},
-  Névoa:{fraco:"Ar",forte:"Sombras"}
-};
+<label for="elemento">Elemento:</label>
+<select id="elemento" onchange="salvarElemento()">
+  <!-- opções dos elementos -->
+</select>
+<div id="infoElement"></div>
 
-const infoElemento=document.getElementById("infoElemento");
-const selectElemento=document.getElementById("elemento");
-
-function atualizarInfoElemental(){
-  const el=selectElemento.value;
-  const d=tabelaElemental[el];
-  infoElemento.innerText=d?`Fraqueza: ${d.fraco} | Vantagem: ${d.forte}`:"Sem dados";
-}
-
-selectElemento.addEventListener("change",atualizarInfoElemental);
-atualizarInfoElemental();
 
 // ===== LINHA ADICIONADA (GRÁFICO AUTOMÁTICO) =====
 document.querySelectorAll(".atrib").forEach(a=>a.addEventListener("input",()=>{grafico.data.datasets[0].data=[...document.querySelectorAll(".atrib")].slice(0,6).map(x=>+x.innerText);grafico.update();})); 
@@ -403,8 +345,90 @@ function carregarFicha() {
 
   alert(`Ficha carregada de ${repNome}!`);
 }
-</script>
+<script>
+  const repNome = window.location.pathname.split("/")[1];
 
+  const tabelaElemental = {
+  Fogo:{fraco:"Água",forte:"Planta"},
+  Água:{fraco:"Raio",forte:"Fogo"},
+  Terra:{fraco:"Água",forte:"Raio"},
+  Ar:{fraco:"Terra",forte:"Fogo"},
+  Raio:{fraco:"Terra",forte:"Água"},
+  Gelo:{fraco:"Fogo",forte:"Ar"},
+  Natureza:{fraco:"Fogo",forte:"Terra"},
+  Madeira:{fraco:"Fogo",forte:"Água"},
+  Planta:{fraco:"Fogo",forte:"Água"},
+  Veneno:{fraco:"Luz",forte:"Planta"},
+  Areia:{fraco:"Água",forte:"Fogo"},
+  Lama:{fraco:"Raio",forte:"Terra"},
+  Pedra:{fraco:"Raio",forte:"Gelo"},
+  Sombras:{fraco:"Luz",forte:"Medo"},
+  Trevas:{fraco:"Luz",forte:"Psíquico"},
+  Maldição:{fraco:"Sagrado",forte:"Emoção"},
+  Corrupção:{fraco:"Ordem",forte:"Caos"},
+  Vazio:{fraco:"Energia",forte:"Abismo"},
+  Medo:{fraco:"Luz",forte:"Sonho"},
+  Luz:{fraco:"Trevas",forte:"Maldição"},
+  Sagrado:{fraco:"Profano",forte:"Trevas"},
+  Celestial:{fraco:"Caos",forte:"Infernal"},
+  Astral:{fraco:"Espaço",forte:"Estelar"},
+  Estelar:{fraco:"Abismo",forte:"Astral"},
+  Ordem:{fraco:"Caos",forte:"Destino"},
+  Caos:{fraco:"Ordem",forte:"Infernal"},
+  Infernal:{fraco:"Sagrado",forte:"Sangue"},
+  Sangue:{fraco:"Veneno",forte:"Sacrifício"},
+  Sacrifício:{fraco:"Pecado",forte:"Sagrado"},
+  Pecado:{fraco:"Ordem",forte:"Emoção"},
+  Mente:{fraco:"Emoção",forte:"Psíquico"},
+  Psíquico:{fraco:"Trevas",forte:"Sonho"},
+  Sonho:{fraco:"Ordem",forte:"Ilusão"},
+  Ilusão:{fraco:"Luz",forte:"Emoção"},
+  Emoção:{fraco:"Mente",forte:"Pecado"},
+  Metal:{fraco:"Raio",forte:"Veneno"},
+  Ferro:{fraco:"Fogo",forte:"Ossos"},
+  Ossos:{fraco:"Metal",forte:"Veneno"},
+  Cristal:{fraco:"Sombras",forte:"Luz"},
+  Vidro:{fraco:"Pedra",forte:"Gelo"},
+  Tempo:{fraco:"Caos",forte:"Destino"},
+  Espaço:{fraco:"Gravidade",forte:"Astral"},
+  Gravidade:{fraco:"Espaço",forte:"Ar"},
+  Destino:{fraco:"Acaso",forte:"Tempo"},
+  Acaso:{fraco:"Ordem",forte:"Destino"},
+  Energia:{fraco:"Abismo",forte:"Éter"},
+  Éter:{fraco:"Vazio",forte:"Energia"},
+  Abismo:{fraco:"Luz",forte:"Vazio"},
+  Cinzas:{fraco:"Água",forte:"Fogo"},
+  Névoa:{fraco:"Ar",forte:"Sombras"}
+  };
+
+  function salvarElemento() {
+    const elemento = document.getElementById("elemento").value;
+    localStorage.setItem(`elemento-${repNome}`, elemento);
+    atualizarInfoElemento();
+  }
+
+  function atualizarInfoElemento() {
+    const elementoSelecionado = localStorage.getItem(`elemento-${repNome}`);
+    const infoElement = document.getElementById("infoElement");
+
+    if (elementoSelecionado && tabelaElemental[elementoSelecionado]) {
+      const info = tabelaElemental[elementoSelecionado];
+      infoElement.innerText = `Fraqueza: ${info.fraco} | Vantagem: ${info.forte}`;
+    } else {
+      infoElement.innerText = "Sem dados";
+    }
+  }
+
+  function carregarFicha() {
+    // ... seu código de carregar imagem e atributos ...
+
+    const elemento = localStorage.getItem(`elemento-${repNome}`);
+    if (elemento) {
+      document.getElementById("elemento").value = elemento;
+    }
+
+    atualizarInfoElemento();
+  }
 </script>
 
 </body>
