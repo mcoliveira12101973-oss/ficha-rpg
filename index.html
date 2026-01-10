@@ -77,7 +77,7 @@ canvas{max-width:100%;height:400px!important;}
 <div class="ficha">
 <h1>Ficha de RPG</h1>
 
-<button onclick="salvarFicha()">Salvar ficha</button>
+<button onclick="salvarAutomatico()">Salvar ficha</button>
 
 <div class="topo">
 <img id="imgPersonagem" src="https://via.placeholder.com/180x240">
@@ -106,12 +106,12 @@ canvas{max-width:100%;height:400px!important;}
 </select>
 </p>
 
-<button onclick="definirImagem()">Adicionar imagem</button>
-<button onclick="removerImagem()">Remover imagem</button>
-
 <p><b>Relação Elemental:</b>
 <span id="infoElemento" style="color:#ffd700;">—</span>
 </p>
+
+<button onclick="definirImagem()">Adicionar imagem</button>
+<button onclick="removerImagem()">Remover imagem</button>
 </div>
 </div>
 
@@ -174,9 +174,9 @@ canvas{max-width:100%;height:400px!important;}
 </div>
 
 <script>
-const repNome="local";
+const repNome = window.location.pathname.split("/")[1] || "local";
 
-/* ================= SISTEMA ELEMENTAL (ORIGINAL COMPLETO) ================= */
+/* ================= TABELA ELEMENTAL COMPLETA (ORIGINAL) ================= */
 const tabelaElemental = {
   Fogo:{fraco:"Água",forte:"Planta"},
   Água:{fraco:"Raio",forte:"Fogo"},
@@ -233,16 +233,13 @@ const tabelaElemental = {
 function salvarElemento(){
   localStorage.setItem("elemento-"+repNome, elemento.value);
   atualizarInfoElemento();
+  salvarAutomatico();
 }
-
 function atualizarInfoElemento(){
   const el = localStorage.getItem("elemento-"+repNome);
-  if(el && tabelaElemental[el]){
-    infoElemento.innerText =
-      `Fraqueza: ${tabelaElemental[el].fraco} | Vantagem: ${tabelaElemental[el].forte}`;
-  } else {
-    infoElemento.innerText = "—";
-  }
+  infoElemento.innerText = (el && tabelaElemental[el])
+    ? `Fraqueza: ${tabelaElemental[el].fraco} | Vantagem: ${tabelaElemental[el].forte}`
+    : "—";
 }
 
 /* ================= VIDA / MANA ================= */
@@ -252,35 +249,35 @@ function alterarHP(v){
   hpAtual.innerText=a;
   if(a>0)window.hpAvisado=false;
   atualizarBarras();
+  salvarAutomatico();
 }
 function alterarMP(v){
   let a=+mpAtual.innerText||0,m=+mpMax.innerText||0;
   a=Math.min(Math.max(a+v,0),m);
   mpAtual.innerText=a;
   atualizarBarras();
+  salvarAutomatico();
 }
 function atualizarBarras(){
   let hpA=+hpAtual.innerText||0,hpM=+hpMax.innerText||1;
   let mpA=+mpAtual.innerText||0,mpM=+mpMax.innerText||1;
-
-  let hpP=(hpA/hpM)*100, mpP=(mpA/mpM)*100;
-  hpBar.style.width=hpP+"%";
-  mpBar.style.width=mpP+"%";
-  hpBar.style.background=hpP<=25?"#e74c3c":"#c0392b";
-
+  hpBar.style.width=(hpA/hpM*100)+"%";
+  mpBar.style.width=(mpA/mpM*100)+"%";
+  hpBar.style.background=(hpA/hpM<=.25)?"#e74c3c":"#c0392b";
   if(hpA===0&&!window.hpAvisado){
     window.hpAvisado=true;
-    alert("⚠️ ATENÇÃO!\nO personagem chegou a 0 de HP!");
+    alert("⚠️ ATENÇÃO! O personagem chegou a 0 de HP!");
   }
 }
 
 /* ================= IMAGEM ================= */
 function definirImagem(){
   const l=prompt("Cole o link da imagem:");
-  if(l)imgPersonagem.src=l;
+  if(l){imgPersonagem.src=l;salvarAutomatico();}
 }
 function removerImagem(){
   imgPersonagem.src="https://via.placeholder.com/180x240";
+  salvarAutomatico();
 }
 
 /* ================= GRÁFICO ================= */
@@ -295,7 +292,8 @@ const grafico=new Chart(document.getElementById("grafico"),{
       data:getValores(),
       backgroundColor:"rgba(0,200,255,.2)",
       borderColor:"#00c8ff",
-      pointBackgroundColor:"#00c8ff"
+      pointBackgroundColor:"#00c8ff",
+      pointRadius:5
     }]
   },
   options:{scales:{r:{beginAtZero:true,max:100}}}
@@ -307,17 +305,23 @@ function atualizarGrafico(){
   grafico.data.datasets[0].pointBackgroundColor=
     v.map((_,i)=>i===d?"#2ecc71":"#00c8ff");
   grafico.update();
+  localStorage.setItem("atributos-"+repNome,JSON.stringify(v));
 }
-document.querySelectorAll(".atrib").forEach(e=>e.addEventListener("input",atualizarGrafico));
+document.querySelectorAll(".atrib").forEach(e=>e.addEventListener("input",()=>{
+  atualizarGrafico();
+  salvarAutomatico();
+}));
 
-/* ================= SALVAR / CARREGAR ================= */
-function salvarFicha(){
+/* ================= SALVAMENTO AUTOMÁTICO ================= */
+function salvarAutomatico(){
   document.querySelectorAll("[contenteditable]").forEach(e=>{
     if(e.id)localStorage.setItem(e.id+"-"+repNome,e.innerText);
   });
-  localStorage.setItem("elemento-"+repNome,elemento.value);
   localStorage.setItem("img-"+repNome,imgPersonagem.src);
+  localStorage.setItem("elemento-"+repNome,elemento.value);
 }
+
+/* ================= CARREGAR ================= */
 function carregarFicha(){
   document.querySelectorAll("[contenteditable]").forEach(e=>{
     const v=localStorage.getItem(e.id+"-"+repNome);
@@ -327,6 +331,11 @@ function carregarFicha(){
   if(el)elemento.value=el;
   const img=localStorage.getItem("img-"+repNome);
   if(img)imgPersonagem.src=img;
+  const atr=localStorage.getItem("atributos-"+repNome);
+  if(atr){
+    const v=JSON.parse(atr);
+    document.querySelectorAll(".atrib").forEach((e,i)=>e.innerText=v[i]);
+  }
   atualizarInfoElemento();
   atualizarBarras();
   atualizarGrafico();
