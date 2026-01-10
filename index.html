@@ -76,6 +76,12 @@ select {
   border:1px solid #333; 
   padding:5px; 
 } 
+
+/* 🔧 MELHORIA ADICIONADA: canvas maior e nítido */
+canvas { 
+  max-width:100%; 
+  height:400px !important; 
+} 
 </style> 
 </head> 
 
@@ -113,8 +119,8 @@ select {
 </p> 
 
 <div style="margin-top:10px"> 
-  <button onclick="definirImagem()">Adicionar imagem (link)</button> 
-  <button onclick="removerImagem()">Remover imagem</button> 
+<button onclick="definirImagem()">Adicionar imagem (link)</button> 
+<button onclick="removerImagem()">Remover imagem</button> 
 </div> 
 
 <p><b>Relação Elemental:</b> 
@@ -185,7 +191,6 @@ function atualizarBarras(){
   mpBar.style.width = (mpAtual.innerText / mpMax.innerText) * 100 + "%"; 
 } 
 
-// 🔧 MELHORIA: limitar HP/MP corretamente
 function alterarHP(v){ 
   let atual = +hpAtual.innerText || 0; 
   let max = +hpMax.innerText || 0; 
@@ -202,7 +207,6 @@ function alterarMP(v){
   atualizarBarras(); 
 } 
 
-// 🔧 MELHORIA: impedir letras em PV/PM
 ["hpAtual","hpMax","mpAtual","mpMax"].forEach(id=>{ 
   document.getElementById(id).addEventListener("input",()=>{ 
     document.getElementById(id).innerText = document.getElementById(id).innerText.replace(/\D/g,""); 
@@ -210,23 +214,71 @@ function alterarMP(v){
   }); 
 }); 
 
+// 🔧 MELHORIA ADICIONADA: cores por valor
+function corPorValor(v){ 
+  if(v >= 70) return "rgba(46,204,113,0.6)"; 
+  if(v >= 40) return "rgba(241,196,15,0.6)"; 
+  return "rgba(231,76,60,0.6)"; 
+} 
+function bordaPorValor(v){ 
+  if(v >= 70) return "rgba(46,204,113,1)"; 
+  if(v >= 40) return "rgba(241,196,15,1)"; 
+  return "rgba(231,76,60,1)"; 
+} 
+
+// 🔧 MELHORIA ADICIONADA: corrigir resolução do canvas
+const canvas=document.getElementById("grafico"); 
+const dpr=window.devicePixelRatio||1; 
+const rect=canvas.getBoundingClientRect(); 
+canvas.width=rect.width*dpr; 
+canvas.height=rect.height*dpr; 
+canvas.getContext("2d").scale(dpr,dpr); 
+
 // ================= GRÁFICO ================= 
-const grafico = new Chart(document.getElementById("grafico"), { 
+const grafico = new Chart(canvas, { 
   type:"radar", 
   data:{ 
     labels:["Força","Destreza","Constituição","Inteligência","Sabedoria","Carisma"], 
     datasets:[{ 
       data:[12,14,13,10,11,9], 
-      backgroundColor:"rgba(0,200,255,0.2)", 
-      borderColor:"rgba(0,200,255,1)" 
+      backgroundColor:[12,14,13,10,11,9].map(corPorValor), 
+      borderColor:[12,14,13,10,11,9].map(bordaPorValor), 
+      pointBackgroundColor:[12,14,13,10,11,9].map(bordaPorValor), 
+      pointRadius:5 
     }] 
   }, 
-  options:{ scales:{ r:{ beginAtZero:true, max:20 } } } 
+  options:{ 
+    responsive:true, 
+    maintainAspectRatio:false, 
+    devicePixelRatio:window.devicePixelRatio||1, 
+    scales:{ r:{ beginAtZero:true, max:100 } } 
+  } 
+}); 
+
+// 🔧 MELHORIA ADICIONADA: números nos pontos
+Chart.register({ 
+  id:"valoresRadar", 
+  afterDatasetsDraw(chart){ 
+    const ctx=chart.ctx; 
+    ctx.save(); 
+    ctx.fillStyle="#fff"; 
+    ctx.font="bold 12px Arial"; 
+    ctx.textAlign="center"; 
+    chart.data.datasets[0].data.forEach((v,i)=>{ 
+      const p=chart.getDatasetMeta(0).data[i]; 
+      if(p) ctx.fillText(v,p.x,p.y-8); 
+    }); 
+    ctx.restore(); 
+  } 
 }); 
 
 document.querySelectorAll(".atrib").forEach(a=>{ 
   a.addEventListener("input",()=>{ 
-    grafico.data.datasets[0].data = [...document.querySelectorAll(".atrib")].map(x=>+x.innerText||0); 
+    const valores=[...document.querySelectorAll(".atrib")].map(x=>+x.innerText||0); 
+    grafico.data.datasets[0].data=valores; 
+    grafico.data.datasets[0].backgroundColor=valores.map(corPorValor); 
+    grafico.data.datasets[0].borderColor=valores.map(bordaPorValor); 
+    grafico.data.datasets[0].pointBackgroundColor=valores.map(bordaPorValor); 
     grafico.update(); 
   }); 
 }); 
@@ -236,15 +288,15 @@ let autoSaveTimeout;
 document.querySelectorAll("[contenteditable], select").forEach(el=>{ 
   el.addEventListener("input",()=>{ 
     clearTimeout(autoSaveTimeout); 
-    autoSaveTimeout = setTimeout(salvarFicha,800); 
+    autoSaveTimeout=setTimeout(salvarFicha,800); 
   }); 
 }); 
 
 // ================= IMAGEM ================= 
-const imgPersonagem = document.querySelector(".topo img"); 
+const imgPersonagem=document.querySelector(".topo img"); 
 function definirImagem(){ 
-  const link = prompt("Cole o link da imagem:"); 
-  if(link) imgPersonagem.src = link; 
+  const link=prompt("Cole o link da imagem:"); 
+  if(link) imgPersonagem.src=link; 
 } 
 function removerImagem(){ 
   imgPersonagem.src="https://via.placeholder.com/180x240"; 
@@ -252,13 +304,11 @@ function removerImagem(){
 
 // ================= SALVAR / CARREGAR ================= 
 function salvarFicha(){ 
-  localStorage.setItem(`imagem-${repNome}`, imgPersonagem.src); 
+  localStorage.setItem(`imagem-${repNome}`,imgPersonagem.src); 
   document.querySelectorAll("[contenteditable]").forEach(el=>{ 
-    if(el.id) localStorage.setItem(`${el.id}-${repNome}`, el.innerText); 
+    if(el.id) localStorage.setItem(`${el.id}-${repNome}`,el.innerText); 
   }); 
-  localStorage.setItem(`elemento-${repNome}`, elemento.value); 
-
-  // 🔧 MELHORIA: feedback visual
+  localStorage.setItem(`elemento-${repNome}`,elemento.value); 
   const aviso=document.createElement("div"); 
   aviso.innerText="✔ Ficha salva"; 
   aviso.style.cssText="position:fixed;bottom:20px;right:20px;background:#2ecc71;color:#000;padding:10px 15px;border-radius:8px;font-weight:bold;"; 
@@ -267,18 +317,16 @@ function salvarFicha(){
 } 
 
 function carregarFicha(){ 
-  const img = localStorage.getItem(`imagem-${repNome}`); 
-  if(img) imgPersonagem.src = img; 
+  const img=localStorage.getItem(`imagem-${repNome}`); 
+  if(img) imgPersonagem.src=img; 
   document.querySelectorAll("[contenteditable]").forEach(el=>{ 
-    const val = localStorage.getItem(`${el.id}-${repNome}`); 
-    if(val) el.innerText = val; 
+    const val=localStorage.getItem(`${el.id}-${repNome}`); 
+    if(val) el.innerText=val; 
   }); 
-  const el = localStorage.getItem(`elemento-${repNome}`); 
-  if(el) elemento.value = el; 
   atualizarBarras(); 
 } 
 
-window.onload = carregarFicha; 
+window.onload=carregarFicha; 
 </script> 
 </body> 
 </html>
