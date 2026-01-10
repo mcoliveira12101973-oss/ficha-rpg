@@ -10,67 +10,58 @@ body{
   background:#0e0e0e;
   color:#eee;
   font-family:Arial,sans-serif;
-  padding:20px
+  padding:20px;
 }
 .ficha{
   max-width:1100px;
   margin:auto;
   background:#1a1a1a;
   padding:20px;
-  border-radius:12px
+  border-radius:12px;
 }
-h1,h2{text-align:center}
-.topo{display:flex;gap:20px;flex-wrap:wrap}
+h1,h2{text-align:center;}
+.topo{display:flex;gap:20px;flex-wrap:wrap;}
 .topo img{
-  width:180px;height:240px;
+  width:180px;
+  height:240px;
   object-fit:cover;
   border-radius:10px;
-  border:2px solid #333
+  border:2px solid #333;
 }
 .info span,td[contenteditable]{
   background:#222;
   padding:4px 6px;
-  border-radius:4px
+  border-radius:4px;
 }
 table{
   width:100%;
   border-collapse:collapse;
-  margin-top:10px
+  margin-top:10px;
 }
 th,td{
   border:1px solid #333;
-  padding:8px
+  padding:8px;
 }
-th{background:#222}
-.barra{
-  width:100%;
-  height:18px;
-  background:#333;
-  border-radius:10px;
-  overflow:hidden
-}
-.barra div{height:100%;transition:width .4s}
-.hp{background:#c0392b}
-.mp{background:#2980b9}
+th{background:#222;}
 button{
   background:#333;
-  color:white;
+  color:#fff;
   border:none;
   padding:5px 8px;
   margin:2px;
-  border-radius:5px
+  border-radius:5px;
 }
-button:hover{background:#555}
-.secao{margin-top:30px}
+button:hover{background:#555;}
+.secao{margin-top:30px;}
 select{
   background:#222;
   color:#fff;
   border:1px solid #333;
-  padding:5px
+  padding:5px;
 }
 canvas{
-  width:100%!important;
-  height:420px!important
+  max-width:100%;
+  height:400px!important;
 }
 </style>
 </head>
@@ -78,10 +69,12 @@ canvas{
 <body>
 <div class="ficha">
 <h1>Ficha de RPG</h1>
+
 <button onclick="salvarFicha()">Salvar ficha</button>
 
 <div class="topo">
 <img src="https://via.placeholder.com/180x240">
+
 <div class="info">
 <p><b>Nome:</b> <span contenteditable id="nome">Herói</span></p>
 <p><b>Nível:</b> <span contenteditable id="nivel">1</span></p>
@@ -103,44 +96,13 @@ canvas{
 <option>Tempo</option><option>Espaço</option><option>Gravidade</option><option>Destino</option>
 <option>Acaso</option><option>Energia</option><option>Éter</option><option>Abismo</option>
 <option>Cinzas</option><option>Névoa</option>
-</select></p>
-
-<div style="margin-top:10px">
-<button onclick="definirImagem()">Adicionar imagem</button>
-<button onclick="removerImagem()">Remover imagem</button>
-</div>
+</select>
+</p>
 
 <p><b>Relação Elemental:</b>
-<span id="infoElemento" style="color:#ffd700">—</span>
+<span id="infoElemento" style="color:#ffd700;">—</span>
 </p>
 </div>
-</div>
-
-<div class="secao">
-<h2>Status de Combate</h2>
-<table>
-<tr><th>Item</th><th>Atual</th><th>Máx</th><th>Ações</th></tr>
-<tr>
-<td>PV</td>
-<td contenteditable id="hpAtual">40</td>
-<td contenteditable id="hpMax">50</td>
-<td>
-<button onclick="alterarHP(-5)">-5</button>
-<button onclick="alterarHP(5)">+5</button>
-</td>
-</tr>
-<tr><td colspan="4"><div class="barra"><div id="hpBar" class="hp"></div></div></td></tr>
-<tr>
-<td>PM</td>
-<td contenteditable id="mpAtual">20</td>
-<td contenteditable id="mpMax">30</td>
-<td>
-<button onclick="alterarMP(-5)">-5</button>
-<button onclick="alterarMP(5)">+5</button>
-</td>
-</tr>
-<tr><td colspan="4"><div class="barra"><div id="mpBar" class="mp"></div></div></td></tr>
-</table>
 </div>
 
 <div class="secao">
@@ -155,123 +117,114 @@ canvas{
 <tr><td>Carisma</td><td contenteditable class="atrib" id="carisma">9</td></tr>
 </table>
 
-<h2>Atributos de Combate</h2>
-<table>
-<tr><th>Atributo</th><th>Valor</th></tr>
-<tr><td>Defesa / CA</td><td contenteditable id="defesa">10</td></tr>
-<tr><td>Iniciativa</td><td contenteditable id="iniciativa">0</td></tr>
-<tr><td>Deslocamento</td><td contenteditable id="deslocamento">9m</td></tr>
-<tr><td>Mestria de Elemento</td><td contenteditable id="mestria">Nenhuma</td></tr>
-</table>
-
 <canvas id="grafico"></canvas>
 </div>
 </div>
 
 <script>
-const repNome=location.pathname.split("/")[1]||"local";
-const canvas=document.getElementById("grafico");
+const repNome = window.location.pathname.split("/")[1] || "local";
 
-function atualizarBarras(){
-  hpBar.style.width=(hpAtual.innerText/hpMax.innerText*100)+"%";
-  mpBar.style.width=(mpAtual.innerText/mpMax.innerText*100)+"%";
-}
-function alterarHP(v){
-  hpAtual.innerText=Math.min(+hpMax.innerText,Math.max(0,+hpAtual.innerText+v));
-  atualizarBarras()
-}
-function alterarMP(v){
-  mpAtual.innerText=Math.min(+mpMax.innerText,Math.max(0,+mpAtual.innerText+v));
-  atualizarBarras()
+/* ================= SISTEMA ELEMENTAL ================= */
+const tabelaElemental = {
+  Fogo:{fraco:"Água",forte:"Planta"},
+  Água:{fraco:"Raio",forte:"Fogo"},
+  Terra:{fraco:"Água",forte:"Raio"},
+  Ar:{fraco:"Terra",forte:"Fogo"},
+  Raio:{fraco:"Terra",forte:"Água"},
+  Gelo:{fraco:"Fogo",forte:"Ar"},
+  Natureza:{fraco:"Fogo",forte:"Terra"},
+  Madeira:{fraco:"Fogo",forte:"Água"},
+  Planta:{fraco:"Fogo",forte:"Água"},
+  Veneno:{fraco:"Luz",forte:"Planta"},
+  Areia:{fraco:"Água",forte:"Fogo"},
+  Lama:{fraco:"Raio",forte:"Terra"},
+  Pedra:{fraco:"Raio",forte:"Gelo"},
+  Sombras:{fraco:"Luz",forte:"Medo"},
+  Trevas:{fraco:"Luz",forte:"Psíquico"},
+  Maldição:{fraco:"Sagrado",forte:"Emoção"},
+  Corrupção:{fraco:"Ordem",forte:"Caos"},
+  Vazio:{fraco:"Energia",forte:"Abismo"},
+  Medo:{fraco:"Luz",forte:"Sonho"},
+  Luz:{fraco:"Trevas",forte:"Maldição"},
+  Cinzas:{fraco:"Água",forte:"Fogo"},
+  Névoa:{fraco:"Ar",forte:"Sombras"}
+};
+
+function salvarElemento(){
+  localStorage.setItem(`elemento-${repNome}`, elemento.value);
+  atualizarInfoElemento();
 }
 
-function cor(v){
-  if(v>=70)return"rgba(46,204,113,.6)";
-  if(v>=40)return"rgba(241,196,15,.6)";
-  return"rgba(231,76,60,.6)"
-}
-function borda(v){
-  if(v>=70)return"rgba(46,204,113,1)";
-  if(v>=40)return"rgba(241,196,15,1)";
-  return"rgba(231,76,60,1)"
+function atualizarInfoElemento(){
+  const el = localStorage.getItem(`elemento-${repNome}`);
+  infoElemento.innerText = (el && tabelaElemental[el])
+    ? `Fraqueza: ${tabelaElemental[el].fraco} | Vantagem: ${tabelaElemental[el].forte}`
+    : "—";
 }
 
-Chart.register({
-  id:"valoresRadar",
-  afterDatasetsDraw(chart){
-    const ctx=chart.ctx;
-    ctx.fillStyle="#fff";
-    ctx.font="bold 12px Arial";
-    chart.data.datasets[0].data.forEach((v,i)=>{
-      const p=chart.getDatasetMeta(0).data[i];
-      ctx.fillText(v,p.x,p.y-8)
-    })
-  }
-});
+/* ================= GRÁFICO ================= */
+function getValores(){
+  return [...document.querySelectorAll(".atrib")].map(e=>+e.innerText||0);
+}
+function indiceDominante(valores){
+  return valores.indexOf(Math.max(...valores));
+}
 
-let dados=JSON.parse(localStorage.getItem(`grafico-${repNome}`))||
-[12,14,13,10,11,9];
-
-const grafico=new Chart(canvas,{
+const grafico = new Chart(document.getElementById("grafico"),{
   type:"radar",
   data:{
     labels:["Força","Destreza","Constituição","Inteligência","Sabedoria","Carisma"],
     datasets:[{
-      data:dados,
-      backgroundColor:dados.map(cor),
-      borderColor:dados.map(borda),
-      pointBackgroundColor:dados.map(borda),
-      pointRadius:dados.map(v=>v==Math.max(...dados)?8:5)
+      data:getValores(),
+      backgroundColor:"rgba(0,200,255,.2)",
+      borderColor:"#00c8ff",
+      pointBackgroundColor:"#00c8ff",
+      pointRadius:5
     }]
   },
-  options:{
-    responsive:true,
-    maintainAspectRatio:false,
-    scales:{r:{beginAtZero:true,max:100}}
-  }
+  options:{scales:{r:{beginAtZero:true,max:100}}}
 });
 
-document.querySelectorAll(".atrib").forEach(a=>{
-  a.addEventListener("input",()=>{
-    const v=[...document.querySelectorAll(".atrib")].map(x=>+x.innerText||0);
-    localStorage.setItem(`grafico-${repNome}`,JSON.stringify(v));
-    grafico.data.datasets[0].data=v;
-    grafico.data.datasets[0].backgroundColor=v.map(cor);
-    grafico.data.datasets[0].borderColor=v.map(borda);
-    grafico.data.datasets[0].pointBackgroundColor=v.map(borda);
-    grafico.data.datasets[0].pointRadius=v.map(x=>x==Math.max(...v)?8:5);
-    grafico.update()
-  })
+function atualizarGrafico(){
+  const valores = getValores();
+  const dom = indiceDominante(valores);
+  grafico.data.datasets[0].data = valores;
+  grafico.data.datasets[0].pointBackgroundColor =
+    valores.map((_,i)=>i===dom?"#2ecc71":"#00c8ff");
+  grafico.update();
+  localStorage.setItem(`atributos-${repNome}`, JSON.stringify(valores));
+}
+
+document.querySelectorAll(".atrib").forEach(el=>{
+  el.addEventListener("input", atualizarGrafico);
 });
 
-const img=document.querySelector(".topo img");
-function definirImagem(){
-  const l=prompt("Link da imagem:");
-  if(l)img.src=l
-}
-function removerImagem(){
-  img.src="https://via.placeholder.com/180x240"
-}
-
+/* ================= SALVAR / CARREGAR ================= */
 function salvarFicha(){
-  localStorage.setItem(`imagem-${repNome}`,img.src);
-  document.querySelectorAll("[contenteditable]").forEach(e=>{
-    localStorage.setItem(`${e.id}-${repNome}`,e.innerText)
+  document.querySelectorAll("[contenteditable]").forEach(el=>{
+    if(el.id) localStorage.setItem(`${el.id}-${repNome}`, el.innerText);
   });
-  localStorage.setItem(`elemento-${repNome}`,elemento.value);
-  alert("Ficha salva!")
+  salvarElemento();
+  atualizarGrafico();
 }
 
 function carregarFicha(){
-  const i=localStorage.getItem(`imagem-${repNome}`);
-  if(i)img.src=i;
-  document.querySelectorAll("[contenteditable]").forEach(e=>{
-    const v=localStorage.getItem(`${e.id}-${repNome}`);
-    if(v)e.innerText=v
+  document.querySelectorAll("[contenteditable]").forEach(el=>{
+    const v = localStorage.getItem(`${el.id}-${repNome}`);
+    if(v) el.innerText = v;
   });
-  atualizarBarras()
+  const el = localStorage.getItem(`elemento-${repNome}`);
+  if(el) elemento.value = el;
+  const atr = localStorage.getItem(`atributos-${repNome}`);
+  if(atr){
+    const v = JSON.parse(atr);
+    document.querySelectorAll(".atrib").forEach((e,i)=>e.innerText=v[i]);
+  }
+  atualizarInfoElemento();
+  atualizarGrafico();
 }
-window.onload=carregarFicha;
+
+window.onload = carregarFicha;
 </script>
 </body>
 </html>
