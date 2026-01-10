@@ -176,57 +176,114 @@ canvas{max-width:100%;height:400px!important;}
 <script>
 const repNome="local";
 
-/* VIDA / MANA */
+/* ================= SISTEMA ELEMENTAL (ORIGINAL COMPLETO) ================= */
+const tabelaElemental = {
+  Fogo:{fraco:"Água",forte:"Planta"},
+  Água:{fraco:"Raio",forte:"Fogo"},
+  Terra:{fraco:"Água",forte:"Raio"},
+  Ar:{fraco:"Terra",forte:"Fogo"},
+  Raio:{fraco:"Terra",forte:"Água"},
+  Gelo:{fraco:"Fogo",forte:"Ar"},
+  Natureza:{fraco:"Fogo",forte:"Terra"},
+  Madeira:{fraco:"Fogo",forte:"Água"},
+  Planta:{fraco:"Fogo",forte:"Água"},
+  Veneno:{fraco:"Luz",forte:"Planta"},
+  Areia:{fraco:"Água",forte:"Fogo"},
+  Lama:{fraco:"Raio",forte:"Terra"},
+  Pedra:{fraco:"Raio",forte:"Gelo"},
+  Sombras:{fraco:"Luz",forte:"Medo"},
+  Trevas:{fraco:"Luz",forte:"Psíquico"},
+  Maldição:{fraco:"Sagrado",forte:"Emoção"},
+  Corrupção:{fraco:"Ordem",forte:"Caos"},
+  Vazio:{fraco:"Energia",forte:"Abismo"},
+  Medo:{fraco:"Luz",forte:"Sonho"},
+  Luz:{fraco:"Trevas",forte:"Maldição"},
+  Sagrado:{fraco:"Profano",forte:"Trevas"},
+  Celestial:{fraco:"Caos",forte:"Infernal"},
+  Astral:{fraco:"Espaço",forte:"Estelar"},
+  Estelar:{fraco:"Abismo",forte:"Astral"},
+  Ordem:{fraco:"Caos",forte:"Destino"},
+  Caos:{fraco:"Ordem",forte:"Infernal"},
+  Infernal:{fraco:"Sagrado",forte:"Sangue"},
+  Sangue:{fraco:"Veneno",forte:"Sacrifício"},
+  Sacrifício:{fraco:"Pecado",forte:"Sagrado"},
+  Pecado:{fraco:"Ordem",forte:"Emoção"},
+  Mente:{fraco:"Emoção",forte:"Psíquico"},
+  Psíquico:{fraco:"Trevas",forte:"Sonho"},
+  Sonho:{fraco:"Ordem",forte:"Ilusão"},
+  Ilusão:{fraco:"Luz",forte:"Emoção"},
+  Emoção:{fraco:"Mente",forte:"Pecado"},
+  Metal:{fraco:"Raio",forte:"Veneno"},
+  Ferro:{fraco:"Fogo",forte:"Ossos"},
+  Ossos:{fraco:"Metal",forte:"Veneno"},
+  Cristal:{fraco:"Sombras",forte:"Luz"},
+  Vidro:{fraco:"Pedra",forte:"Gelo"},
+  Tempo:{fraco:"Caos",forte:"Destino"},
+  Espaço:{fraco:"Gravidade",forte:"Astral"},
+  Gravidade:{fraco:"Espaço",forte:"Ar"},
+  Destino:{fraco:"Acaso",forte:"Tempo"},
+  Acaso:{fraco:"Ordem",forte:"Destino"},
+  Energia:{fraco:"Abismo",forte:"Éter"},
+  Éter:{fraco:"Vazio",forte:"Energia"},
+  Abismo:{fraco:"Luz",forte:"Vazio"},
+  Cinzas:{fraco:"Água",forte:"Fogo"},
+  Névoa:{fraco:"Ar",forte:"Sombras"}
+};
+
+function salvarElemento(){
+  localStorage.setItem("elemento-"+repNome, elemento.value);
+  atualizarInfoElemento();
+}
+
+function atualizarInfoElemento(){
+  const el = localStorage.getItem("elemento-"+repNome);
+  if(el && tabelaElemental[el]){
+    infoElemento.innerText =
+      `Fraqueza: ${tabelaElemental[el].fraco} | Vantagem: ${tabelaElemental[el].forte}`;
+  } else {
+    infoElemento.innerText = "—";
+  }
+}
+
+/* ================= VIDA / MANA ================= */
 function alterarHP(v){
-  let atual=+hpAtual.innerText||0;
-  let max=+hpMax.innerText||0;
-  atual+=v;
-  if(atual<0)atual=0;
-  if(atual>max)atual=max;
-  hpAtual.innerText=atual;
-  if(atual>0)window.hpAvisado=false;
+  let a=+hpAtual.innerText||0,m=+hpMax.innerText||0;
+  a=Math.min(Math.max(a+v,0),m);
+  hpAtual.innerText=a;
+  if(a>0)window.hpAvisado=false;
   atualizarBarras();
 }
 function alterarMP(v){
-  let atual=+mpAtual.innerText||0;
-  let max=+mpMax.innerText||0;
-  atual+=v;
-  if(atual<0)atual=0;
-  if(atual>max)atual=max;
-  mpAtual.innerText=atual;
+  let a=+mpAtual.innerText||0,m=+mpMax.innerText||0;
+  a=Math.min(Math.max(a+v,0),m);
+  mpAtual.innerText=a;
   atualizarBarras();
 }
-
 function atualizarBarras(){
-  let hpA=+hpAtual.innerText||0;
-  let hpM=+hpMax.innerText||1;
-  let mpA=+mpAtual.innerText||0;
-  let mpM=+mpMax.innerText||1;
+  let hpA=+hpAtual.innerText||0,hpM=+hpMax.innerText||1;
+  let mpA=+mpAtual.innerText||0,mpM=+mpMax.innerText||1;
 
-  let hpP=(hpA/hpM)*100;
-  let mpP=(mpA/mpM)*100;
-
+  let hpP=(hpA/hpM)*100, mpP=(mpA/mpM)*100;
   hpBar.style.width=hpP+"%";
   mpBar.style.width=mpP+"%";
-
   hpBar.style.background=hpP<=25?"#e74c3c":"#c0392b";
 
-  if(hpA===0 && !window.hpAvisado){
+  if(hpA===0&&!window.hpAvisado){
     window.hpAvisado=true;
     alert("⚠️ ATENÇÃO!\nO personagem chegou a 0 de HP!");
   }
 }
 
-/* IMAGEM */
+/* ================= IMAGEM ================= */
 function definirImagem(){
-  const l=prompt("Link da imagem:");
+  const l=prompt("Cole o link da imagem:");
   if(l)imgPersonagem.src=l;
 }
 function removerImagem(){
   imgPersonagem.src="https://via.placeholder.com/180x240";
 }
 
-/* GRÁFICO */
+/* ================= GRÁFICO ================= */
 function getValores(){return [...document.querySelectorAll(".atrib")].map(e=>+e.innerText||0);}
 function indiceDominante(v){return v.indexOf(Math.max(...v));}
 
@@ -245,8 +302,7 @@ const grafico=new Chart(document.getElementById("grafico"),{
 });
 
 function atualizarGrafico(){
-  const v=getValores();
-  const d=indiceDominante(v);
+  const v=getValores(),d=indiceDominante(v);
   grafico.data.datasets[0].data=v;
   grafico.data.datasets[0].pointBackgroundColor=
     v.map((_,i)=>i===d?"#2ecc71":"#00c8ff");
@@ -254,16 +310,7 @@ function atualizarGrafico(){
 }
 document.querySelectorAll(".atrib").forEach(e=>e.addEventListener("input",atualizarGrafico));
 
-/* ELEMENTO */
-function salvarElemento(){
-  localStorage.setItem("elemento-"+repNome,elemento.value);
-}
-function atualizarElemento(){
-  const el=localStorage.getItem("elemento-"+repNome);
-  if(el)elemento.value=el;
-}
-
-/* SALVAR / CARREGAR */
+/* ================= SALVAR / CARREGAR ================= */
 function salvarFicha(){
   document.querySelectorAll("[contenteditable]").forEach(e=>{
     if(e.id)localStorage.setItem(e.id+"-"+repNome,e.innerText);
@@ -280,6 +327,7 @@ function carregarFicha(){
   if(el)elemento.value=el;
   const img=localStorage.getItem("img-"+repNome);
   if(img)imgPersonagem.src=img;
+  atualizarInfoElemento();
   atualizarBarras();
   atualizarGrafico();
 }
