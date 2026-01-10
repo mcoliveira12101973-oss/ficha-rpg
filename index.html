@@ -1,328 +1,284 @@
-<!DOCTYPE html> 
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Ficha de RPG</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!DOCTYPE html>  
+<html lang="pt-BR"> 
+<head> 
+<meta charset="UTF-8"> 
+<title>Ficha de RPG</title> 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
 
-<style>
-body {
-  background:#0e0e0e;
-  color:#eee;
-  font-family: Arial, sans-serif;
-  padding:20px;
-}
-.ficha {
-  max-width:1100px;
-  margin:auto;
-  background:#1a1a1a;
-  padding:20px;
-  border-radius:12px;
-}
-h1,h2 { text-align:center; }
-.topo {
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
-}
-.topo img {
-  width:180px;
-  height:240px;
-  object-fit:cover;
-  border-radius:10px;
-  border:2px solid #333;
-}
-.info span, td[contenteditable] {
-  background:#222;
-  padding:4px 6px;
-  border-radius:4px;
-}
-table {
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
-}
-th,td {
-  border:1px solid #333;
-  padding:8px;
-}
-th { background:#222; }
-.barra {
-  width:100%;
-  height:18px;
-  background:#333;
-  border-radius:10px;
-  overflow:hidden;
-}
-.barra div {
-  height:100%;
-  transition:width 0.4s;
-}
-.hp { background:#c0392b; }
-.mp { background:#2980b9; }
-button {
-  background:#333;
-  color:white;
-  border:none;
-  padding:5px 8px;
-  margin:2px;
-  border-radius:5px;
-}
-button:hover { background:#555; }
-.secao { margin-top:30px; }
-select {
-  background:#222;
-  color:#fff;
-  border:1px solid #333;
-  padding:5px;
-}
-</style>
-</head>
+<style> 
+body { 
+  background:#0e0e0e; 
+  color:#eee; 
+  font-family: Arial, sans-serif; 
+  padding:20px; 
+} 
+.ficha { 
+  max-width:1100px; 
+  margin:auto; 
+  background:#1a1a1a; 
+  padding:20px; 
+  border-radius:12px; 
+} 
+h1,h2 { text-align:center; } 
+.topo { 
+  display:flex; 
+  gap:20px; 
+  flex-wrap:wrap; 
+} 
+.topo img { 
+  width:180px; 
+  height:240px; 
+  object-fit:cover; 
+  border-radius:10px; 
+  border:2px solid #333; 
+} 
+.info span, td[contenteditable] { 
+  background:#222; 
+  padding:4px 6px; 
+  border-radius:4px; 
+} 
+table { 
+  width:100%; 
+  border-collapse:collapse; 
+  margin-top:10px; 
+} 
+th,td { 
+  border:1px solid #333; 
+  padding:8px; 
+} 
+th { background:#222; } 
+.barra { 
+  width:100%; 
+  height:18px; 
+  background:#333; 
+  border-radius:10px; 
+  overflow:hidden; 
+} 
+.barra div { 
+  height:100%; 
+  transition:width 0.4s; 
+} 
+.hp { background:#c0392b; } 
+.mp { background:#2980b9; } 
+button { 
+  background:#333; 
+  color:white; 
+  border:none; 
+  padding:5px 8px; 
+  margin:2px; 
+  border-radius:5px; 
+} 
+button:hover { background:#555; } 
+.secao { margin-top:30px; } 
+select { 
+  background:#222; 
+  color:#fff; 
+  border:1px solid #333; 
+  padding:5px; 
+} 
+</style> 
+</head> 
 
-<body>
-<div class="ficha">
-<h1>🧙 Ficha de RPG</h1>
-<button onclick="salvarFicha()">💾 Salvar ficha</button>
+<body> 
+<div class="ficha"> 
+<h1>Ficha de RPG</h1> 
 
-<div class="topo">
-<img src="https://via.placeholder.com/180x240">
+<button onclick="salvarFicha()">Salvar ficha</button> 
 
-<div class="info">
-<p><b>Nome:</b> <span contenteditable id="nome">Herói</span></p>
-<p><b>Nível:</b> <span contenteditable id="nivel">1</span></p>
-<p><b>Raça:</b> <span contenteditable id="raca">Humano</span></p>
-<p><b>Classe:</b> <span contenteditable id="classe">Guardião</span></p>
+<div class="topo"> 
+<img src="https://via.placeholder.com/180x240"> 
 
-<p><b>Elemento:</b>
-<select id="elemento" onchange="salvarElemento()">
-<option>Fogo</option><option>Água</option><option>Terra</option><option>Ar</option>
-<option>Raio</option><option>Gelo</option><option>Natureza</option><option>Madeira</option>
-<option>Planta</option><option>Veneno</option><option>Areia</option><option>Lama</option>
-<option>Pedra</option><option>Sombras</option><option>Trevas</option><option>Maldição</option>
-<option>Corrupção</option><option>Vazio</option><option>Medo</option><option>Luz</option>
-<option>Sagrado</option><option>Celestial</option><option>Astral</option><option>Estelar</option>
-<option>Ordem</option><option>Caos</option><option>Infernal</option><option>Sangue</option>
-<option>Sacrifício</option><option>Pecado</option><option>Mente</option><option>Psíquico</option>
-<option>Sonho</option><option>Ilusão</option><option>Emoção</option><option>Metal</option>
-<option>Ferro</option><option>Ossos</option><option>Cristal</option><option>Vidro</option>
-<option>Tempo</option><option>Espaço</option><option>Gravidade</option><option>Destino</option>
-<option>Acaso</option><option>Energia</option><option>Éter</option><option>Abismo</option>
-<option>Cinzas</option><option>Névoa</option>
-</select>
-</p>
+<div class="info"> 
+<p><b>Nome:</b> <span contenteditable id="nome">Herói</span></p> 
+<p><b>Nível:</b> <span contenteditable id="nivel">1</span></p> 
+<p><b>Raça:</b> <span contenteditable id="raca">Humano</span></p> 
+<p><b>Classe:</b> <span contenteditable id="classe">Guardião</span></p> 
 
-<div style="margin-top:10px">
-  <button onclick="definirImagem()">Adicionar imagem (link)</button>
-  <button onclick="removerImagem()">Remover imagem</button>
-</div>
+<p><b>Elemento:</b> 
+<select id="elemento" onchange="salvarElemento()"> 
+<option>Fogo</option><option>Água</option><option>Terra</option><option>Ar</option> 
+<option>Raio</option><option>Gelo</option><option>Natureza</option><option>Madeira</option> 
+<option>Planta</option><option>Veneno</option><option>Areia</option><option>Lama</option> 
+<option>Pedra</option><option>Sombras</option><option>Trevas</option><option>Maldição</option> 
+<option>Corrupção</option><option>Vazio</option><option>Medo</option><option>Luz</option> 
+<option>Sagrado</option><option>Celestial</option><option>Astral</option><option>Estelar</option> 
+<option>Ordem</option><option>Caos</option><option>Infernal</option><option>Sangue</option> 
+<option>Sacrifício</option><option>Pecado</option><option>Mente</option><option>Psíquico</option> 
+<option>Sonho</option><option>Ilusão</option><option>Emoção</option><option>Metal</option> 
+<option>Ferro</option><option>Ossos</option><option>Cristal</option><option>Vidro</option> 
+<option>Tempo</option><option>Espaço</option><option>Gravidade</option><option>Destino</option> 
+<option>Acaso</option><option>Energia</option><option>Éter</option><option>Abismo</option> 
+<option>Cinzas</option><option>Névoa</option> 
+</select> 
+</p> 
 
-<p><b>Relação Elemental:</b>
-<span id="infoElemento" style="color:#ffd700;">—</span>
-</p>
-</div>
-</div>
+<div style="margin-top:10px"> 
+  <button onclick="definirImagem()">Adicionar imagem (link)</button> 
+  <button onclick="removerImagem()">Remover imagem</button> 
+</div> 
 
-<div class="secao">
-<h2>Status de Combate</h2>
-<table>
-<tr><th>Item</th><th>Atual</th><th>Máx</th><th>Ações</th></tr>
-<tr>
-<td>PV / Vida</td>
-<td contenteditable id="hpAtual">40</td>
-<td contenteditable id="hpMax">50</td>
-<td>
-<button onclick="alterarHP(-5)">-5</button>
-<button onclick="alterarHP(5)">+5</button>
-</td>
-</tr>
-<tr><td colspan="4"><div class="barra"><div id="hpBar" class="hp"></div></div></td></tr>
-<tr>
-<td>PM / Mana</td>
-<td contenteditable id="mpAtual">20</td>
-<td contenteditable id="mpMax">30</td>
-<td>
-<button onclick="alterarMP(-5)">-5</button>
-<button onclick="alterarMP(5)">+5</button>
-</td>
-</tr>
-<tr><td colspan="4"><div class="barra"><div id="mpBar" class="mp"></div></div></td></tr>
-</table>
-</div>
+<p><b>Relação Elemental:</b> 
+<span id="infoElemento" style="color:#ffd700;">—</span> 
+</p> 
+</div> 
+</div> 
 
-<div class="secao">
-<h2>Atributos</h2>
-<table>
-<tr><th>Atributo</th><th>Valor</th></tr>
-<tr><td>Força</td><td contenteditable class="atrib" id="forca">12</td></tr>
-<tr><td>Destreza</td><td contenteditable class="atrib" id="destreza">14</td></tr>
-<tr><td>Constituição</td><td contenteditable class="atrib" id="constituicao">13</td></tr>
-<tr><td>Inteligência</td><td contenteditable class="atrib" id="inteligencia">10</td></tr>
-<tr><td>Sabedoria</td><td contenteditable class="atrib" id="sabedoria">11</td></tr>
-<tr><td>Carisma</td><td contenteditable class="atrib" id="carisma">9</td></tr>
-</table>
+<div class="secao"> 
+<h2>Status de Combate</h2> 
+<table> 
+<tr><th>Item</th><th>Atual</th><th>Máx</th><th>Ações</th></tr> 
+<tr> 
+<td>PV / Vida</td> 
+<td contenteditable id="hpAtual">40</td> 
+<td contenteditable id="hpMax">50</td> 
+<td> 
+<button onclick="alterarHP(-5)">-5</button> 
+<button onclick="alterarHP(5)">+5</button> 
+</td> 
+</tr> 
+<tr><td colspan="4"><div class="barra"><div id="hpBar" class="hp"></div></div></td></tr> 
+<tr> 
+<td>PM / Mana</td> 
+<td contenteditable id="mpAtual">20</td> 
+<td contenteditable id="mpMax">30</td> 
+<td> 
+<button onclick="alterarMP(-5)">-5</button> 
+<button onclick="alterarMP(5)">+5</button> 
+</td> 
+</tr> 
+<tr><td colspan="4"><div class="barra"><div id="mpBar" class="mp"></div></div></td></tr> 
+</table> 
+</div> 
 
-<h2>Atributos de Combate</h2>
-<table>
-<tr><th>Atributo</th><th>Valor</th></tr>
-<tr><td>Defesa / CA</td><td contenteditable id="defesa">10</td></tr>
-<tr><td>Iniciativa</td><td contenteditable id="iniciativa">0</td></tr>
-<tr><td>Deslocamento</td><td contenteditable id="deslocamento">9m</td></tr>
-<tr><td>Mestria de Elemento</td><td contenteditable id="mestria">Nenhuma</td></tr>
-</table>
+<div class="secao"> 
+<h2>Atributos</h2> 
+<table> 
+<tr><th>Atributo</th><th>Valor</th></tr> 
+<tr><td>Força</td><td contenteditable class="atrib" id="forca">12</td></tr> 
+<tr><td>Destreza</td><td contenteditable class="atrib" id="destreza">14</td></tr> 
+<tr><td>Constituição</td><td contenteditable class="atrib" id="constituicao">13</td></tr> 
+<tr><td>Inteligência</td><td contenteditable class="atrib" id="inteligencia">10</td></tr> 
+<tr><td>Sabedoria</td><td contenteditable class="atrib" id="sabedoria">11</td></tr> 
+<tr><td>Carisma</td><td contenteditable class="atrib" id="carisma">9</td></tr> 
+</table> 
 
-<canvas id="grafico"></canvas>
-</div>
+<h2>Atributos de Combate</h2> 
+<table> 
+<tr><th>Atributo</th><th>Valor</th></tr> 
+<tr><td>Defesa / CA</td><td contenteditable id="defesa">10</td></tr> 
+<tr><td>Iniciativa</td><td contenteditable id="iniciativa">0</td></tr> 
+<tr><td>Deslocamento</td><td contenteditable id="deslocamento">9m</td></tr> 
+<tr><td>Mestria de Elemento</td><td contenteditable id="mestria">Nenhuma</td></tr> 
+</table> 
 
-</div>
+<canvas id="grafico"></canvas> 
+</div> 
+</div> 
 
-<script>
-// ================= CONFIG =================
-const repNome = window.location.pathname.split("/")[1] || "local";
+<script> 
+// ================= CONFIG ================= 
+const repNome = window.location.pathname.split("/")[1] || "local"; 
 
-// ================= VIDA / MANA =================
-function atualizarBarras(){
-  hpBar.style.width = (hpAtual.innerText / hpMax.innerText) * 100 + "%";
-  mpBar.style.width = (mpAtual.innerText / mpMax.innerText) * 100 + "%";
-}
-function alterarHP(v){ hpAtual.innerText = Math.max(0, +hpAtual.innerText + v); atualizarBarras(); }
-function alterarMP(v){ mpAtual.innerText = Math.max(0, +mpAtual.innerText + v); atualizarBarras(); }
+// ================= VIDA / MANA ================= 
+function atualizarBarras(){ 
+  hpBar.style.width = (hpAtual.innerText / hpMax.innerText) * 100 + "%"; 
+  mpBar.style.width = (mpAtual.innerText / mpMax.innerText) * 100 + "%"; 
+} 
 
-// ================= GRÁFICO =================
-const grafico = new Chart(document.getElementById("grafico"), {
-  type:"radar",
-  data:{
-    labels:["Força","Destreza","Constituição","Inteligência","Sabedoria","Carisma"],
-    datasets:[{
-      data:[12,14,13,10,11,9],
-      backgroundColor:"rgba(0,200,255,0.2)",
-      borderColor:"rgba(0,200,255,1)"
-    }]
-  },
-  options:{ scales:{ r:{ beginAtZero:true, max:20 } } }
-});
+// 🔧 MELHORIA: limitar HP/MP corretamente
+function alterarHP(v){ 
+  let atual = +hpAtual.innerText || 0; 
+  let max = +hpMax.innerText || 0; 
+  atual = Math.min(max, Math.max(0, atual + v)); 
+  hpAtual.innerText = atual; 
+  atualizarBarras(); 
+} 
 
-document.querySelectorAll(".atrib").forEach(a=>{
-  a.addEventListener("input",()=>{
-    grafico.data.datasets[0].data =
-      [...document.querySelectorAll(".atrib")].map(x=>+x.innerText||0);
-    grafico.update();
-  });
-});
+function alterarMP(v){ 
+  let atual = +mpAtual.innerText || 0; 
+  let max = +mpMax.innerText || 0; 
+  atual = Math.min(max, Math.max(0, atual + v)); 
+  mpAtual.innerText = atual; 
+  atualizarBarras(); 
+} 
 
-// ================= SISTEMA ELEMENTAL =================
-const tabelaElemental = {
-  Fogo:{fraco:"Água",forte:"Planta"},
-  Água:{fraco:"Raio",forte:"Fogo"},
-  Terra:{fraco:"Água",forte:"Raio"},
-  Ar:{fraco:"Terra",forte:"Fogo"},
-  Raio:{fraco:"Terra",forte:"Água"},
-  Gelo:{fraco:"Fogo",forte:"Ar"},
-  Natureza:{fraco:"Fogo",forte:"Terra"},
-  Madeira:{fraco:"Fogo",forte:"Água"},
-  Planta:{fraco:"Fogo",forte:"Água"},
-  Veneno:{fraco:"Luz",forte:"Planta"},
-  Areia:{fraco:"Água",forte:"Fogo"},
-  Lama:{fraco:"Raio",forte:"Terra"},
-  Pedra:{fraco:"Raio",forte:"Gelo"},
-  Sombras:{fraco:"Luz",forte:"Medo"},
-  Trevas:{fraco:"Luz",forte:"Psíquico"},
-  Maldição:{fraco:"Sagrado",forte:"Emoção"},
-  Corrupção:{fraco:"Ordem",forte:"Caos"},
-  Vazio:{fraco:"Energia",forte:"Abismo"},
-  Medo:{fraco:"Luz",forte:"Sonho"},
-  Luz:{fraco:"Trevas",forte:"Maldição"},
-  Sagrado:{fraco:"Profano",forte:"Trevas"},
-  Celestial:{fraco:"Caos",forte:"Infernal"},
-  Astral:{fraco:"Espaço",forte:"Estelar"},
-  Estelar:{fraco:"Abismo",forte:"Astral"},
-  Ordem:{fraco:"Caos",forte:"Destino"},
-  Caos:{fraco:"Ordem",forte:"Infernal"},
-  Infernal:{fraco:"Sagrado",forte:"Sangue"},
-  Sangue:{fraco:"Veneno",forte:"Sacrifício"},
-  Sacrifício:{fraco:"Pecado",forte:"Sagrado"},
-  Pecado:{fraco:"Ordem",forte:"Emoção"},
-  Mente:{fraco:"Emoção",forte:"Psíquico"},
-  Psíquico:{fraco:"Trevas",forte:"Sonho"},
-  Sonho:{fraco:"Ordem",forte:"Ilusão"},
-  Ilusão:{fraco:"Luz",forte:"Emoção"},
-  Emoção:{fraco:"Mente",forte:"Pecado"},
-  Metal:{fraco:"Raio",forte:"Veneno"},
-  Ferro:{fraco:"Fogo",forte:"Ossos"},
-  Ossos:{fraco:"Metal",forte:"Veneno"},
-  Cristal:{fraco:"Sombras",forte:"Luz"},
-  Vidro:{fraco:"Pedra",forte:"Gelo"},
-  Tempo:{fraco:"Caos",forte:"Destino"},
-  Espaço:{fraco:"Gravidade",forte:"Astral"},
-  Gravidade:{fraco:"Espaço",forte:"Ar"},
-  Destino:{fraco:"Acaso",forte:"Tempo"},
-  Acaso:{fraco:"Ordem",forte:"Destino"},
-  Energia:{fraco:"Abismo",forte:"Éter"},
-  Éter:{fraco:"Vazio",forte:"Energia"},
-  Abismo:{fraco:"Luz",forte:"Vazio"},
-  Cinzas:{fraco:"Água",forte:"Fogo"},
-  Névoa:{fraco:"Ar",forte:"Sombras"}
-};
+// 🔧 MELHORIA: impedir letras em PV/PM
+["hpAtual","hpMax","mpAtual","mpMax"].forEach(id=>{ 
+  document.getElementById(id).addEventListener("input",()=>{ 
+    document.getElementById(id).innerText = document.getElementById(id).innerText.replace(/\D/g,""); 
+    atualizarBarras(); 
+  }); 
+}); 
 
-function salvarElemento(){
-  localStorage.setItem(`elemento-${repNome}`, elemento.value);
-  atualizarInfoElemento();
-}
+// ================= GRÁFICO ================= 
+const grafico = new Chart(document.getElementById("grafico"), { 
+  type:"radar", 
+  data:{ 
+    labels:["Força","Destreza","Constituição","Inteligência","Sabedoria","Carisma"], 
+    datasets:[{ 
+      data:[12,14,13,10,11,9], 
+      backgroundColor:"rgba(0,200,255,0.2)", 
+      borderColor:"rgba(0,200,255,1)" 
+    }] 
+  }, 
+  options:{ scales:{ r:{ beginAtZero:true, max:20 } } } 
+}); 
 
-function atualizarInfoElemento(){
-  const el = localStorage.getItem(`elemento-${repNome}`);
-  if(el && tabelaElemental[el]){
-    infoElemento.innerText =
-      `Fraqueza: ${tabelaElemental[el].fraco} | Vantagem: ${tabelaElemental[el].forte}`;
-  } else infoElemento.innerText = "—";
-}
+document.querySelectorAll(".atrib").forEach(a=>{ 
+  a.addEventListener("input",()=>{ 
+    grafico.data.datasets[0].data = [...document.querySelectorAll(".atrib")].map(x=>+x.innerText||0); 
+    grafico.update(); 
+  }); 
+}); 
 
-// ===== MECÂNICA DE FRAQUEZA / VANTAGEM =====
-function calcularMultiplicadorElemento(atacante, defensor){
-  if(!tabelaElemental[atacante]) return 1;
-  if(tabelaElemental[atacante].forte === defensor) return 1.5;
-  if(tabelaElemental[atacante].fraco === defensor) return 0.5;
-  return 1;
-}
+// ================= AUTO SAVE ================= 
+let autoSaveTimeout; 
+document.querySelectorAll("[contenteditable], select").forEach(el=>{ 
+  el.addEventListener("input",()=>{ 
+    clearTimeout(autoSaveTimeout); 
+    autoSaveTimeout = setTimeout(salvarFicha,800); 
+  }); 
+}); 
 
-// ================= IMAGEM =================
-const imgPersonagem = document.querySelector(".topo img");
+// ================= IMAGEM ================= 
+const imgPersonagem = document.querySelector(".topo img"); 
+function definirImagem(){ 
+  const link = prompt("Cole o link da imagem:"); 
+  if(link) imgPersonagem.src = link; 
+} 
+function removerImagem(){ 
+  imgPersonagem.src="https://via.placeholder.com/180x240"; 
+} 
 
-function definirImagem(){
-  const link = prompt("Cole o link da imagem:");
-  if(link) imgPersonagem.src = link;
-}
-function removerImagem(){
-  imgPersonagem.src="https://via.placeholder.com/180x240";
-}
+// ================= SALVAR / CARREGAR ================= 
+function salvarFicha(){ 
+  localStorage.setItem(`imagem-${repNome}`, imgPersonagem.src); 
+  document.querySelectorAll("[contenteditable]").forEach(el=>{ 
+    if(el.id) localStorage.setItem(`${el.id}-${repNome}`, el.innerText); 
+  }); 
+  localStorage.setItem(`elemento-${repNome}`, elemento.value); 
 
-// ================= SALVAR / CARREGAR =================
-function salvarFicha(){
-  localStorage.setItem(`imagem-${repNome}`, imgPersonagem.src);
-  document.querySelectorAll("[contenteditable]").forEach(el=>{
-    if(el.id) localStorage.setItem(`${el.id}-${repNome}`, el.innerText);
-  });
-  localStorage.setItem(`elemento-${repNome}`, elemento.value);
-  alert("Ficha salva!");
-}
+  // 🔧 MELHORIA: feedback visual
+  const aviso=document.createElement("div"); 
+  aviso.innerText="✔ Ficha salva"; 
+  aviso.style.cssText="position:fixed;bottom:20px;right:20px;background:#2ecc71;color:#000;padding:10px 15px;border-radius:8px;font-weight:bold;"; 
+  document.body.appendChild(aviso); 
+  setTimeout(()=>aviso.remove(),2000); 
+} 
 
-function carregarFicha(){
-  const img = localStorage.getItem(`imagem-${repNome}`);
-  if(img) imgPersonagem.src = img;
+function carregarFicha(){ 
+  const img = localStorage.getItem(`imagem-${repNome}`); 
+  if(img) imgPersonagem.src = img; 
+  document.querySelectorAll("[contenteditable]").forEach(el=>{ 
+    const val = localStorage.getItem(`${el.id}-${repNome}`); 
+    if(val) el.innerText = val; 
+  }); 
+  const el = localStorage.getItem(`elemento-${repNome}`); 
+  if(el) elemento.value = el; 
+  atualizarBarras(); 
+} 
 
-  document.querySelectorAll("[contenteditable]").forEach(el=>{
-    const val = localStorage.getItem(`${el.id}-${repNome}`);
-    if(val) el.innerText = val;
-  });
-
-  const el = localStorage.getItem(`elemento-${repNome}`);
-  if(el) elemento.value = el;
-
-  atualizarInfoElemento();
-  atualizarBarras();
-}
-
-window.onload = carregarFicha;
-</script>
-
-</body>
+window.onload = carregarFicha; 
+</script> 
+</body> 
 </html>
