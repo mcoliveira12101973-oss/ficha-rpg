@@ -1,332 +1,277 @@
-<!DOCTYPE html>  
-<html lang="pt-BR"> 
-<head> 
-<meta charset="UTF-8"> 
-<title>Ficha de RPG</title> 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Ficha de RPG</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<style> 
-body { 
-  background:#0e0e0e; 
-  color:#eee; 
-  font-family: Arial, sans-serif; 
-  padding:20px; 
-} 
-.ficha { 
-  max-width:1100px; 
-  margin:auto; 
-  background:#1a1a1a; 
-  padding:20px; 
-  border-radius:12px; 
-} 
-h1,h2 { text-align:center; } 
-.topo { 
-  display:flex; 
-  gap:20px; 
-  flex-wrap:wrap; 
-} 
-.topo img { 
-  width:180px; 
-  height:240px; 
-  object-fit:cover; 
-  border-radius:10px; 
-  border:2px solid #333; 
-} 
-.info span, td[contenteditable] { 
-  background:#222; 
-  padding:4px 6px; 
-  border-radius:4px; 
-} 
-table { 
-  width:100%; 
-  border-collapse:collapse; 
-  margin-top:10px; 
-} 
-th,td { 
-  border:1px solid #333; 
-  padding:8px; 
-} 
-th { background:#222; } 
-.barra { 
-  width:100%; 
-  height:18px; 
-  background:#333; 
-  border-radius:10px; 
-  overflow:hidden; 
-} 
-.barra div { 
-  height:100%; 
-  transition:width 0.4s; 
-} 
-.hp { background:#c0392b; } 
-.mp { background:#2980b9; } 
-button { 
-  background:#333; 
-  color:white; 
-  border:none; 
-  padding:5px 8px; 
-  margin:2px; 
-  border-radius:5px; 
-} 
-button:hover { background:#555; } 
-.secao { margin-top:30px; } 
-select { 
-  background:#222; 
-  color:#fff; 
-  border:1px solid #333; 
-  padding:5px; 
-} 
+<style>
+body{
+  background:#0e0e0e;
+  color:#eee;
+  font-family:Arial,sans-serif;
+  padding:20px
+}
+.ficha{
+  max-width:1100px;
+  margin:auto;
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:12px
+}
+h1,h2{text-align:center}
+.topo{display:flex;gap:20px;flex-wrap:wrap}
+.topo img{
+  width:180px;height:240px;
+  object-fit:cover;
+  border-radius:10px;
+  border:2px solid #333
+}
+.info span,td[contenteditable]{
+  background:#222;
+  padding:4px 6px;
+  border-radius:4px
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px
+}
+th,td{
+  border:1px solid #333;
+  padding:8px
+}
+th{background:#222}
+.barra{
+  width:100%;
+  height:18px;
+  background:#333;
+  border-radius:10px;
+  overflow:hidden
+}
+.barra div{height:100%;transition:width .4s}
+.hp{background:#c0392b}
+.mp{background:#2980b9}
+button{
+  background:#333;
+  color:white;
+  border:none;
+  padding:5px 8px;
+  margin:2px;
+  border-radius:5px
+}
+button:hover{background:#555}
+.secao{margin-top:30px}
+select{
+  background:#222;
+  color:#fff;
+  border:1px solid #333;
+  padding:5px
+}
+canvas{
+  width:100%!important;
+  height:420px!important
+}
+</style>
+</head>
 
-/* 🔧 MELHORIA ADICIONADA: canvas maior e nítido */
-canvas { 
-  max-width:100%; 
-  height:400px !important; 
-} 
-</style> 
-</head> 
+<body>
+<div class="ficha">
+<h1>Ficha de RPG</h1>
+<button onclick="salvarFicha()">Salvar ficha</button>
 
-<body> 
-<div class="ficha"> 
-<h1>Ficha de RPG</h1> 
+<div class="topo">
+<img src="https://via.placeholder.com/180x240">
+<div class="info">
+<p><b>Nome:</b> <span contenteditable id="nome">Herói</span></p>
+<p><b>Nível:</b> <span contenteditable id="nivel">1</span></p>
+<p><b>Raça:</b> <span contenteditable id="raca">Humano</span></p>
+<p><b>Classe:</b> <span contenteditable id="classe">Guardião</span></p>
 
-<button onclick="salvarFicha()">Salvar ficha</button> 
+<p><b>Elemento:</b>
+<select id="elemento" onchange="salvarElemento()">
+<option>Fogo</option><option>Água</option><option>Terra</option><option>Ar</option>
+<option>Raio</option><option>Gelo</option><option>Natureza</option><option>Madeira</option>
+<option>Planta</option><option>Veneno</option><option>Areia</option><option>Lama</option>
+<option>Pedra</option><option>Sombras</option><option>Trevas</option><option>Maldição</option>
+<option>Corrupção</option><option>Vazio</option><option>Medo</option><option>Luz</option>
+<option>Sagrado</option><option>Celestial</option><option>Astral</option><option>Estelar</option>
+<option>Ordem</option><option>Caos</option><option>Infernal</option><option>Sangue</option>
+<option>Sacrifício</option><option>Pecado</option><option>Mente</option><option>Psíquico</option>
+<option>Sonho</option><option>Ilusão</option><option>Emoção</option><option>Metal</option>
+<option>Ferro</option><option>Ossos</option><option>Cristal</option><option>Vidro</option>
+<option>Tempo</option><option>Espaço</option><option>Gravidade</option><option>Destino</option>
+<option>Acaso</option><option>Energia</option><option>Éter</option><option>Abismo</option>
+<option>Cinzas</option><option>Névoa</option>
+</select></p>
 
-<div class="topo"> 
-<img src="https://via.placeholder.com/180x240"> 
+<div style="margin-top:10px">
+<button onclick="definirImagem()">Adicionar imagem</button>
+<button onclick="removerImagem()">Remover imagem</button>
+</div>
 
-<div class="info"> 
-<p><b>Nome:</b> <span contenteditable id="nome">Herói</span></p> 
-<p><b>Nível:</b> <span contenteditable id="nivel">1</span></p> 
-<p><b>Raça:</b> <span contenteditable id="raca">Humano</span></p> 
-<p><b>Classe:</b> <span contenteditable id="classe">Guardião</span></p> 
+<p><b>Relação Elemental:</b>
+<span id="infoElemento" style="color:#ffd700">—</span>
+</p>
+</div>
+</div>
 
-<p><b>Elemento:</b> 
-<select id="elemento" onchange="salvarElemento()"> 
-<option>Fogo</option><option>Água</option><option>Terra</option><option>Ar</option> 
-<option>Raio</option><option>Gelo</option><option>Natureza</option><option>Madeira</option> 
-<option>Planta</option><option>Veneno</option><option>Areia</option><option>Lama</option> 
-<option>Pedra</option><option>Sombras</option><option>Trevas</option><option>Maldição</option> 
-<option>Corrupção</option><option>Vazio</option><option>Medo</option><option>Luz</option> 
-<option>Sagrado</option><option>Celestial</option><option>Astral</option><option>Estelar</option> 
-<option>Ordem</option><option>Caos</option><option>Infernal</option><option>Sangue</option> 
-<option>Sacrifício</option><option>Pecado</option><option>Mente</option><option>Psíquico</option> 
-<option>Sonho</option><option>Ilusão</option><option>Emoção</option><option>Metal</option> 
-<option>Ferro</option><option>Ossos</option><option>Cristal</option><option>Vidro</option> 
-<option>Tempo</option><option>Espaço</option><option>Gravidade</option><option>Destino</option> 
-<option>Acaso</option><option>Energia</option><option>Éter</option><option>Abismo</option> 
-<option>Cinzas</option><option>Névoa</option> 
-</select> 
-</p> 
+<div class="secao">
+<h2>Status de Combate</h2>
+<table>
+<tr><th>Item</th><th>Atual</th><th>Máx</th><th>Ações</th></tr>
+<tr>
+<td>PV</td>
+<td contenteditable id="hpAtual">40</td>
+<td contenteditable id="hpMax">50</td>
+<td>
+<button onclick="alterarHP(-5)">-5</button>
+<button onclick="alterarHP(5)">+5</button>
+</td>
+</tr>
+<tr><td colspan="4"><div class="barra"><div id="hpBar" class="hp"></div></div></td></tr>
+<tr>
+<td>PM</td>
+<td contenteditable id="mpAtual">20</td>
+<td contenteditable id="mpMax">30</td>
+<td>
+<button onclick="alterarMP(-5)">-5</button>
+<button onclick="alterarMP(5)">+5</button>
+</td>
+</tr>
+<tr><td colspan="4"><div class="barra"><div id="mpBar" class="mp"></div></div></td></tr>
+</table>
+</div>
 
-<div style="margin-top:10px"> 
-<button onclick="definirImagem()">Adicionar imagem (link)</button> 
-<button onclick="removerImagem()">Remover imagem</button> 
-</div> 
+<div class="secao">
+<h2>Atributos</h2>
+<table>
+<tr><th>Atributo</th><th>Valor</th></tr>
+<tr><td>Força</td><td contenteditable class="atrib" id="forca">12</td></tr>
+<tr><td>Destreza</td><td contenteditable class="atrib" id="destreza">14</td></tr>
+<tr><td>Constituição</td><td contenteditable class="atrib" id="constituicao">13</td></tr>
+<tr><td>Inteligência</td><td contenteditable class="atrib" id="inteligencia">10</td></tr>
+<tr><td>Sabedoria</td><td contenteditable class="atrib" id="sabedoria">11</td></tr>
+<tr><td>Carisma</td><td contenteditable class="atrib" id="carisma">9</td></tr>
+</table>
 
-<p><b>Relação Elemental:</b> 
-<span id="infoElemento" style="color:#ffd700;">—</span> 
-</p> 
-</div> 
-</div> 
+<h2>Atributos de Combate</h2>
+<table>
+<tr><th>Atributo</th><th>Valor</th></tr>
+<tr><td>Defesa / CA</td><td contenteditable id="defesa">10</td></tr>
+<tr><td>Iniciativa</td><td contenteditable id="iniciativa">0</td></tr>
+<tr><td>Deslocamento</td><td contenteditable id="deslocamento">9m</td></tr>
+<tr><td>Mestria de Elemento</td><td contenteditable id="mestria">Nenhuma</td></tr>
+</table>
 
-<div class="secao"> 
-<h2>Status de Combate</h2> 
-<table> 
-<tr><th>Item</th><th>Atual</th><th>Máx</th><th>Ações</th></tr> 
-<tr> 
-<td>PV / Vida</td> 
-<td contenteditable id="hpAtual">40</td> 
-<td contenteditable id="hpMax">50</td> 
-<td> 
-<button onclick="alterarHP(-5)">-5</button> 
-<button onclick="alterarHP(5)">+5</button> 
-</td> 
-</tr> 
-<tr><td colspan="4"><div class="barra"><div id="hpBar" class="hp"></div></div></td></tr> 
-<tr> 
-<td>PM / Mana</td> 
-<td contenteditable id="mpAtual">20</td> 
-<td contenteditable id="mpMax">30</td> 
-<td> 
-<button onclick="alterarMP(-5)">-5</button> 
-<button onclick="alterarMP(5)">+5</button> 
-</td> 
-</tr> 
-<tr><td colspan="4"><div class="barra"><div id="mpBar" class="mp"></div></div></td></tr> 
-</table> 
-</div> 
+<canvas id="grafico"></canvas>
+</div>
+</div>
 
-<div class="secao"> 
-<h2>Atributos</h2> 
-<table> 
-<tr><th>Atributo</th><th>Valor</th></tr> 
-<tr><td>Força</td><td contenteditable class="atrib" id="forca">12</td></tr> 
-<tr><td>Destreza</td><td contenteditable class="atrib" id="destreza">14</td></tr> 
-<tr><td>Constituição</td><td contenteditable class="atrib" id="constituicao">13</td></tr> 
-<tr><td>Inteligência</td><td contenteditable class="atrib" id="inteligencia">10</td></tr> 
-<tr><td>Sabedoria</td><td contenteditable class="atrib" id="sabedoria">11</td></tr> 
-<tr><td>Carisma</td><td contenteditable class="atrib" id="carisma">9</td></tr> 
-</table> 
+<script>
+const repNome=location.pathname.split("/")[1]||"local";
+const canvas=document.getElementById("grafico");
 
-<h2>Atributos de Combate</h2> 
-<table> 
-<tr><th>Atributo</th><th>Valor</th></tr> 
-<tr><td>Defesa / CA</td><td contenteditable id="defesa">10</td></tr> 
-<tr><td>Iniciativa</td><td contenteditable id="iniciativa">0</td></tr> 
-<tr><td>Deslocamento</td><td contenteditable id="deslocamento">9m</td></tr> 
-<tr><td>Mestria de Elemento</td><td contenteditable id="mestria">Nenhuma</td></tr> 
-</table> 
+function atualizarBarras(){
+  hpBar.style.width=(hpAtual.innerText/hpMax.innerText*100)+"%";
+  mpBar.style.width=(mpAtual.innerText/mpMax.innerText*100)+"%";
+}
+function alterarHP(v){
+  hpAtual.innerText=Math.min(+hpMax.innerText,Math.max(0,+hpAtual.innerText+v));
+  atualizarBarras()
+}
+function alterarMP(v){
+  mpAtual.innerText=Math.min(+mpMax.innerText,Math.max(0,+mpAtual.innerText+v));
+  atualizarBarras()
+}
 
-<canvas id="grafico"></canvas> 
-</div> 
-</div> 
+function cor(v){
+  if(v>=70)return"rgba(46,204,113,.6)";
+  if(v>=40)return"rgba(241,196,15,.6)";
+  return"rgba(231,76,60,.6)"
+}
+function borda(v){
+  if(v>=70)return"rgba(46,204,113,1)";
+  if(v>=40)return"rgba(241,196,15,1)";
+  return"rgba(231,76,60,1)"
+}
 
-<script> 
-// ================= CONFIG ================= 
-const repNome = window.location.pathname.split("/")[1] || "local"; 
+Chart.register({
+  id:"valoresRadar",
+  afterDatasetsDraw(chart){
+    const ctx=chart.ctx;
+    ctx.fillStyle="#fff";
+    ctx.font="bold 12px Arial";
+    chart.data.datasets[0].data.forEach((v,i)=>{
+      const p=chart.getDatasetMeta(0).data[i];
+      ctx.fillText(v,p.x,p.y-8)
+    })
+  }
+});
 
-// ================= VIDA / MANA ================= 
-function atualizarBarras(){ 
-  hpBar.style.width = (hpAtual.innerText / hpMax.innerText) * 100 + "%"; 
-  mpBar.style.width = (mpAtual.innerText / mpMax.innerText) * 100 + "%"; 
-} 
+let dados=JSON.parse(localStorage.getItem(`grafico-${repNome}`))||
+[12,14,13,10,11,9];
 
-function alterarHP(v){ 
-  let atual = +hpAtual.innerText || 0; 
-  let max = +hpMax.innerText || 0; 
-  atual = Math.min(max, Math.max(0, atual + v)); 
-  hpAtual.innerText = atual; 
-  atualizarBarras(); 
-} 
+const grafico=new Chart(canvas,{
+  type:"radar",
+  data:{
+    labels:["Força","Destreza","Constituição","Inteligência","Sabedoria","Carisma"],
+    datasets:[{
+      data:dados,
+      backgroundColor:dados.map(cor),
+      borderColor:dados.map(borda),
+      pointBackgroundColor:dados.map(borda),
+      pointRadius:dados.map(v=>v==Math.max(...dados)?8:5)
+    }]
+  },
+  options:{
+    responsive:true,
+    maintainAspectRatio:false,
+    scales:{r:{beginAtZero:true,max:100}}
+  }
+});
 
-function alterarMP(v){ 
-  let atual = +mpAtual.innerText || 0; 
-  let max = +mpMax.innerText || 0; 
-  atual = Math.min(max, Math.max(0, atual + v)); 
-  mpAtual.innerText = atual; 
-  atualizarBarras(); 
-} 
+document.querySelectorAll(".atrib").forEach(a=>{
+  a.addEventListener("input",()=>{
+    const v=[...document.querySelectorAll(".atrib")].map(x=>+x.innerText||0);
+    localStorage.setItem(`grafico-${repNome}`,JSON.stringify(v));
+    grafico.data.datasets[0].data=v;
+    grafico.data.datasets[0].backgroundColor=v.map(cor);
+    grafico.data.datasets[0].borderColor=v.map(borda);
+    grafico.data.datasets[0].pointBackgroundColor=v.map(borda);
+    grafico.data.datasets[0].pointRadius=v.map(x=>x==Math.max(...v)?8:5);
+    grafico.update()
+  })
+});
 
-["hpAtual","hpMax","mpAtual","mpMax"].forEach(id=>{ 
-  document.getElementById(id).addEventListener("input",()=>{ 
-    document.getElementById(id).innerText = document.getElementById(id).innerText.replace(/\D/g,""); 
-    atualizarBarras(); 
-  }); 
-}); 
+const img=document.querySelector(".topo img");
+function definirImagem(){
+  const l=prompt("Link da imagem:");
+  if(l)img.src=l
+}
+function removerImagem(){
+  img.src="https://via.placeholder.com/180x240"
+}
 
-// 🔧 MELHORIA ADICIONADA: cores por valor
-function corPorValor(v){ 
-  if(v >= 70) return "rgba(46,204,113,0.6)"; 
-  if(v >= 40) return "rgba(241,196,15,0.6)"; 
-  return "rgba(231,76,60,0.6)"; 
-} 
-function bordaPorValor(v){ 
-  if(v >= 70) return "rgba(46,204,113,1)"; 
-  if(v >= 40) return "rgba(241,196,15,1)"; 
-  return "rgba(231,76,60,1)"; 
-} 
+function salvarFicha(){
+  localStorage.setItem(`imagem-${repNome}`,img.src);
+  document.querySelectorAll("[contenteditable]").forEach(e=>{
+    localStorage.setItem(`${e.id}-${repNome}`,e.innerText)
+  });
+  localStorage.setItem(`elemento-${repNome}`,elemento.value);
+  alert("Ficha salva!")
+}
 
-// 🔧 MELHORIA ADICIONADA: corrigir resolução do canvas
-const canvas=document.getElementById("grafico"); 
-const dpr=window.devicePixelRatio||1; 
-const rect=canvas.getBoundingClientRect(); 
-canvas.width=rect.width*dpr; 
-canvas.height=rect.height*dpr; 
-canvas.getContext("2d").scale(dpr,dpr); 
-
-// ================= GRÁFICO ================= 
-const grafico = new Chart(canvas, { 
-  type:"radar", 
-  data:{ 
-    labels:["Força","Destreza","Constituição","Inteligência","Sabedoria","Carisma"], 
-    datasets:[{ 
-      data:[12,14,13,10,11,9], 
-      backgroundColor:[12,14,13,10,11,9].map(corPorValor), 
-      borderColor:[12,14,13,10,11,9].map(bordaPorValor), 
-      pointBackgroundColor:[12,14,13,10,11,9].map(bordaPorValor), 
-      pointRadius:5 
-    }] 
-  }, 
-  options:{ 
-    responsive:true, 
-    maintainAspectRatio:false, 
-    devicePixelRatio:window.devicePixelRatio||1, 
-    scales:{ r:{ beginAtZero:true, max:100 } } 
-  } 
-}); 
-
-// 🔧 MELHORIA ADICIONADA: números nos pontos
-Chart.register({ 
-  id:"valoresRadar", 
-  afterDatasetsDraw(chart){ 
-    const ctx=chart.ctx; 
-    ctx.save(); 
-    ctx.fillStyle="#fff"; 
-    ctx.font="bold 12px Arial"; 
-    ctx.textAlign="center"; 
-    chart.data.datasets[0].data.forEach((v,i)=>{ 
-      const p=chart.getDatasetMeta(0).data[i]; 
-      if(p) ctx.fillText(v,p.x,p.y-8); 
-    }); 
-    ctx.restore(); 
-  } 
-}); 
-
-document.querySelectorAll(".atrib").forEach(a=>{ 
-  a.addEventListener("input",()=>{ 
-    const valores=[...document.querySelectorAll(".atrib")].map(x=>+x.innerText||0); 
-    grafico.data.datasets[0].data=valores; 
-    grafico.data.datasets[0].backgroundColor=valores.map(corPorValor); 
-    grafico.data.datasets[0].borderColor=valores.map(bordaPorValor); 
-    grafico.data.datasets[0].pointBackgroundColor=valores.map(bordaPorValor); 
-    grafico.update(); 
-  }); 
-}); 
-
-// ================= AUTO SAVE ================= 
-let autoSaveTimeout; 
-document.querySelectorAll("[contenteditable], select").forEach(el=>{ 
-  el.addEventListener("input",()=>{ 
-    clearTimeout(autoSaveTimeout); 
-    autoSaveTimeout=setTimeout(salvarFicha,800); 
-  }); 
-}); 
-
-// ================= IMAGEM ================= 
-const imgPersonagem=document.querySelector(".topo img"); 
-function definirImagem(){ 
-  const link=prompt("Cole o link da imagem:"); 
-  if(link) imgPersonagem.src=link; 
-} 
-function removerImagem(){ 
-  imgPersonagem.src="https://via.placeholder.com/180x240"; 
-} 
-
-// ================= SALVAR / CARREGAR ================= 
-function salvarFicha(){ 
-  localStorage.setItem(`imagem-${repNome}`,imgPersonagem.src); 
-  document.querySelectorAll("[contenteditable]").forEach(el=>{ 
-    if(el.id) localStorage.setItem(`${el.id}-${repNome}`,el.innerText); 
-  }); 
-  localStorage.setItem(`elemento-${repNome}`,elemento.value); 
-  const aviso=document.createElement("div"); 
-  aviso.innerText="✔ Ficha salva"; 
-  aviso.style.cssText="position:fixed;bottom:20px;right:20px;background:#2ecc71;color:#000;padding:10px 15px;border-radius:8px;font-weight:bold;"; 
-  document.body.appendChild(aviso); 
-  setTimeout(()=>aviso.remove(),2000); 
-} 
-
-function carregarFicha(){ 
-  const img=localStorage.getItem(`imagem-${repNome}`); 
-  if(img) imgPersonagem.src=img; 
-  document.querySelectorAll("[contenteditable]").forEach(el=>{ 
-    const val=localStorage.getItem(`${el.id}-${repNome}`); 
-    if(val) el.innerText=val; 
-  }); 
-  atualizarBarras(); 
-} 
-
-window.onload=carregarFicha; 
-</script> 
-</body> 
+function carregarFicha(){
+  const i=localStorage.getItem(`imagem-${repNome}`);
+  if(i)img.src=i;
+  document.querySelectorAll("[contenteditable]").forEach(e=>{
+    const v=localStorage.getItem(`${e.id}-${repNome}`);
+    if(v)e.innerText=v
+  });
+  atualizarBarras()
+}
+window.onload=carregarFicha;
+</script>
+</body>
 </html>
